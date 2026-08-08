@@ -31,20 +31,9 @@
 
 ## ディレクトリ構成
 
-```
-docs/     仕様・ロードマップ・設計判断の記録（人間とAIの接点）
-src/      アプリケーション本体
-  core/     2D純粋ロジック（DOM・Three.js に非依存）
-  ai/       敵戦車の思考ルーチン
-  render/   Three.js による描画（3D依存はこの層だけ）
-  input/    入力収集
-  levels/   ステージデータと検証スキーマ
-  app/      ゲームループ・UI・組み立て
-tests/    全テスト（unit / property / sim / e2e）
-tools/    AI が自己検証に使うCLI（ヘッドレス実行・スクリーンショット）
-```
+`src/` をレイヤーで分割し、ゲームロジックを担う `core/` を他のどの層にも依存させない構成をとっています。`core` がブラウザにも Three.js にも依存しないことが、ヘッドレステストによる自己検証を成立させています。
 
-`core` は他のどの層にも依存しません。依存方向は `core ← { ai, render, app }` の一方向のみで、CI で強制されます。
+構成の詳細と設計理由は [docs/architecture.md](docs/architecture.md) を参照してください。
 
 ## 開発
 
