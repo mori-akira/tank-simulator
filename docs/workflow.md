@@ -55,14 +55,25 @@ push 後は GitHub Actions が同じ検証を実行する。失敗したら他�
 壁の法線ベクトルによる鏡面反射で、速度の大きさは保存する。
 
 Closes #12
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 ```
 
 - **1行目**: `#<Issue番号> <要約>`。Issue 番号だけにしない（`git log --oneline` が読めなくなるため）
 - **2行目**: 空行
 - **3行目以降**: 何をどう変えたかの概要。「なぜ」が自明でないなら理由も書く
-- **末尾**: Issue を完了させるコミットにのみ `Closes #<Issue番号>` を書く。`main` への push で Issue が自動クローズされる
+- **`Closes`**: Issue を完了させるコミットにのみ `Closes #<Issue番号>` を書く。`main` への push で Issue が自動クローズされる
+- **末尾**: `Co-Authored-By: Claude <モデル名> <noreply@anthropic.com>` を**すべてのコミットに付ける**
 
 1つの Issue に複数コミットする場合、`Closes` は最後のコミットにだけ付ける。
+
+### モデル名を書く理由
+
+実装はすべて LLM が行う。**挙動の傾向はモデルによって違う。** どの時期の実装がどのモデルによるものか分からないと、過去の判断が「そのモデルの癖」なのか「意図した設計」なのかを後から切り分けられない。
+
+`Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>` のように、世代まで含めた名前を書く。
+
+[Issue #19](https://github.com/mori-akira/tank-simulator/issues/19) 以前のコミットには付いていないものがある。当時のモデルの記録が残っておらず、遡って正確に書けないため、過去は書き換えていない。
 
 ## ADR との使い分け
 
