@@ -19,7 +19,7 @@ export type Tank = {
   /** 砲塔の向き（rad）。車体と独立。 */
   turret: number;
   alive: boolean;
-  /** 次に撃てるまでの残り時間（秒）。 */
+  /** 次に撃てるまでの残り tick 数。秒で持つと減算の誤差が積もって間隔がぶれる。 */
   cooldown: number;
 };
 

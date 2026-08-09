@@ -1,3 +1,4 @@
+import { resolveHits, stepBullets, tryFire } from "./bullet";
 import { createRng } from "./math/rng";
 import { moveTank } from "./tank";
 import type { Inputs, TankKind, WorldState } from "./types";
@@ -39,8 +40,31 @@ export function createWorld(spec: WorldSpec, seed: number): WorldState {
 export function stepWorld(world: WorldState, inputs: Inputs): void {
   for (const tank of world.tanks) {
     if (!tank.alive) continue;
+    if (tank.cooldown > 0) tank.cooldown -= 1;
+
     const input = inputs.get(tank.id);
-    if (input) moveTank(world, tank, input);
+    if (!input) continue;
+    moveTank(world, tank, input);
+    if (input.fire) tryFire(world, tank);
   }
+
+  stepBullets(world);
+  resolveHits(world);
+  updateOutcome(world);
   world.tick += 1;
+}
+
+function updateOutcome(world: WorldState): void {
+  // 一度ついた決着は覆らない。決着後も弾は飛び続けるため、放っておくと
+  // 「クリア後に流れ弾で失敗」といった逆転が起きる
+  if (world.outcome !== "playing") return;
+
+  const player = world.tanks.find((t) => t.kind === "player");
+  if (player?.alive !== true) {
+    world.outcome = "failed";
+    return;
+  }
+  if (world.tanks.every((t) => t.kind === "player" || !t.alive)) {
+    world.outcome = "cleared";
+  }
 }
