@@ -15,7 +15,15 @@
       "Bash(tail:*)",
       "Bash(wc:*)",
       "Bash(jq:*)",
-      "Bash(diff:*)"
+      "Bash(diff:*)",
+      "Edit(//home/mori-akira/git/tank-simulator/**)",
+      "Write(//home/mori-akira/git/tank-simulator/**)",
+      "Edit(//tmp/claude-1000/**)",
+      "Write(//tmp/claude-1000/**)"
+    ],
+    "deny": [
+      "Edit(//home/mori-akira/git/tank-simulator/.git/**)",
+      "Write(//home/mori-akira/git/tank-simulator/.git/**)"
     ],
     "ask": [
       "Bash(git push:*)",

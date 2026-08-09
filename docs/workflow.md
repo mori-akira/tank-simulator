@@ -96,6 +96,8 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 
 `ask` は `allow` より優先される。そのため `Bash(gh:*)` のように広く許可したうえで、書き込み系のサブコマンドだけを `ask` で引き戻している。`allow` 側を細かく列挙するより漏れが少ない。
 
+ファイルの編集も同じ方針で扱う。リポジトリ内と scratchpad を `allow` に置き、`.git/` だけを `deny` にする。`.git/config` を書き換えれば remote を差し替えられるため、リモートに影響する操作は確認するという上の方針と揃えている。
+
 ただし `git -C <path> push` のような書き方は `Bash(git push:*)` にマッチせず素通りする。**うっかりを防ぐ仕組みであり、機構的な保証ではない。**
 
 ## 前提ツール
