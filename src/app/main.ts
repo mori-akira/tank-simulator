@@ -6,11 +6,13 @@ import { createControls, toTankInput } from "../input/controls.ts";
 import { toWorldSpec } from "../levels/build.ts";
 import { stage01 } from "../levels/stage-01.ts";
 import { createView } from "../render/view.ts";
+import { createHud } from "./hud.ts";
 import { advance, createLoop } from "./loop.ts";
 
 /** 敵の照準誤差に使う seed。固定にしておくと、見えた不具合をリロードで再現できる。 */
 const SEED = 1;
 
+const app = document.getElementById("app") as HTMLElement;
 const canvas = document.getElementById("scene") as HTMLCanvasElement;
 
 const world = createWorld(toWorldSpec(stage01));
@@ -19,6 +21,7 @@ const rng = createRng(SEED);
 
 const view = createView(canvas, world);
 const controls = createControls(canvas);
+const hud = createHud(app);
 const loop = createLoop();
 
 function step(): void {
@@ -40,6 +43,8 @@ requestAnimationFrame(function frame(now) {
   const elapsed = (now - last) / 1000;
   last = now;
 
-  advance(loop, elapsed, step);
+  // 決着したらシミュレーションを止める。描画は続けるので画面は消えない
+  if (world.outcome === "playing") advance(loop, elapsed, step);
   view.render();
+  hud(world.outcome);
 });

@@ -12,15 +12,33 @@
         overflow: hidden;
         background: #14161a;
       }
-      #scene {
-        display: block;
+      #app {
+        position: relative;
         width: 100vw;
         height: 100vh;
+      }
+      #scene {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .hud {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font:
+          700 min(9vw, 88px) / 1 system-ui,
+          sans-serif;
+        color: #fff;
+        letter-spacing: 0.08em;
+        text-shadow: 0 2px 16px #000;
+        pointer-events: none;
       }
     </style>
   </head>
   <body>
-    <canvas id="scene"></canvas>
+    <div id="app"><canvas id="scene"></canvas></div>
     <script type="module" src="/src/app/main.ts"></script>
   </body>
 </html>
