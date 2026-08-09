@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { BULLET_TYPES } from "../../src/core/constants.ts";
 import { hasLineOfSight } from "../../src/core/physics/raycast.ts";
+import { createWorld } from "../../src/core/world.ts";
+import { toWorldSpec } from "../../src/levels/build.ts";
+import { stage01 } from "../../src/levels/stage-01.ts";
 import { worldFromMap } from "../helpers/world.ts";
 
 const r = BULLET_TYPES.standard.radius;
@@ -51,5 +54,28 @@ describe("hasLineOfSight", () => {
     const a = { x: 2.5, y: 2.5 };
     const b = { x: 7.5, y: 2.5 };
     expect(hasLineOfSight(world, a, b, r)).toBe(hasLineOfSight(world, b, a, r));
+  });
+
+  // 壁ブロックの左下の角は (4, 4)。判定が角のどちら側にあるかを厳密に見ているか
+  it.each([
+    ["角との距離が半径より小さければ通らない", 4.0 + r * 0.9, false],
+    ["角との距離が半径より大きければ通る", 4.0 + r * 1.1, true],
+  ])("%s", (_name, y, expected) => {
+    expect(hasLineOfSight(world, { x: 1.5, y }, { x: 7.5, y }, r)).toBe(
+      expected,
+    );
+  });
+
+  // サンプル間の隙間をすり抜けていた実例（Issue #21）。撃つと壁で跳ね返る
+  it("壁の角をかすめる射線はクリアにしない", () => {
+    const stage = createWorld(toWorldSpec(stage01));
+    expect(
+      hasLineOfSight(
+        stage,
+        { x: 14.361957035958767, y: 11.148184817284346 },
+        { x: 4.159279888495803, y: 8.933640241622925 },
+        r,
+      ),
+    ).toBe(false);
   });
 });
