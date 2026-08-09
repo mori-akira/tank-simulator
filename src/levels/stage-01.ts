@@ -1,4 +1,4 @@
-import { stageSchema } from "./schema";
+import { stageSchema } from "./schema.ts";
 
 // 読み込み時に検証する。壊れたステージはインポートの時点で落ちる。
 export const stage01 = stageSchema.parse({

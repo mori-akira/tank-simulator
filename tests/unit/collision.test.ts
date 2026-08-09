@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { TANK_RADIUS } from "../../src/core/constants";
+import { TANK_RADIUS } from "../../src/core/constants.ts";
 import {
   overlapsWall,
   pushOutAlongAxis,
-} from "../../src/core/physics/collision";
-import { worldFromMap } from "../helpers/world";
+} from "../../src/core/physics/collision.ts";
+import { worldFromMap } from "../helpers/world.ts";
 
 // 中央 (3,2) に単独の壁ブロックがある部屋
 const world = worldFromMap([

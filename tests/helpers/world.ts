@@ -1,7 +1,7 @@
-import type { Inputs, TankInput, WorldState } from "../../src/core/types";
-import { createWorld } from "../../src/core/world";
-import { toWorldSpec } from "../../src/levels/build";
-import { stageSchema } from "../../src/levels/schema";
+import type { Inputs, TankInput, WorldState } from "../../src/core/types.ts";
+import { createWorld } from "../../src/core/world.ts";
+import { toWorldSpec } from "../../src/levels/build.ts";
+import { stageSchema } from "../../src/levels/schema.ts";
 
 /** テスト用の小さなステージを ASCII から組み立てる。 */
 export function worldFromMap(map: string[], seed = 1): WorldState {

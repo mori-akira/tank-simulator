@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createRng, nextFloat, nextSigned } from "../../src/core/math/rng";
+import { createRng, nextFloat, nextSigned } from "../../src/core/math/rng.ts";
 
 const take = (seed: number, n: number) => {
   const rng = createRng(seed);

@@ -1,6 +1,6 @@
-import { DT } from "../constants";
-import type { Bullet, WorldState } from "../types";
-import { overlapsWall, pushOutAlongAxis } from "./collision";
+import { DT } from "../constants.ts";
+import type { Bullet, WorldState } from "../types.ts";
+import { overlapsWall, pushOutAlongAxis } from "./collision.ts";
 
 /**
  * 弾を1ステップ進め、壁に当たったら反射させる。

@@ -5,11 +5,11 @@ import {
   MAX_BULLETS_PER_TANK,
   MUZZLE_OFFSET,
   SIM_HZ,
-} from "../../src/core/constants";
-import { overlapsWall } from "../../src/core/physics/collision";
-import type { Bullet, Tank, TankInput } from "../../src/core/types";
-import { stepWorld } from "../../src/core/world";
-import { input, worldFromMap } from "../helpers/world";
+} from "../../src/core/constants.ts";
+import { overlapsWall } from "../../src/core/physics/collision.ts";
+import type { Bullet, Tank, TankInput } from "../../src/core/types.ts";
+import { stepWorld } from "../../src/core/world.ts";
+import { input, worldFromMap } from "../helpers/world.ts";
 
 const standard = BULLET_TYPES.standard;
 

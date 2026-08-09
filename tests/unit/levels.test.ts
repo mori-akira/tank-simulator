@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { CELL_SIZE, STAGE_COLS, STAGE_ROWS } from "../../src/core/constants";
-import { isWall } from "../../src/core/grid";
-import { createWorld } from "../../src/core/world";
-import { toWorldSpec } from "../../src/levels/build";
-import { stageSchema } from "../../src/levels/schema";
-import { stage01 } from "../../src/levels/stage-01";
+import { CELL_SIZE, STAGE_COLS, STAGE_ROWS } from "../../src/core/constants.ts";
+import { isWall } from "../../src/core/grid.ts";
+import { createWorld } from "../../src/core/world.ts";
+import { toWorldSpec } from "../../src/levels/build.ts";
+import { stageSchema } from "../../src/levels/schema.ts";
+import { stage01 } from "../../src/levels/stage-01.ts";
 
 const valid = {
   name: "t",

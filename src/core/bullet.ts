@@ -6,11 +6,11 @@ import {
   MUZZLE_OFFSET,
   SIM_HZ,
   TANK_RADIUS,
-} from "./constants";
-import { cos, sin } from "./math/trig";
-import { overlapsWall } from "./physics/collision";
-import { advanceBullet } from "./physics/ricochet";
-import type { BulletTypeId, Tank, WorldState } from "./types";
+} from "./constants.ts";
+import { cos, sin } from "./math/trig.ts";
+import { overlapsWall } from "./physics/collision.ts";
+import { advanceBullet } from "./physics/ricochet.ts";
+import type { BulletTypeId, Tank, WorldState } from "./types.ts";
 
 const bulletTypeOf = (tank: Tank): BulletTypeId =>
   tank.kind === "player" ? "standard" : ENEMY_TYPES[tank.kind].bullet;

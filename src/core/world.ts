@@ -1,7 +1,7 @@
-import { resolveHits, stepBullets, tryFire } from "./bullet";
-import { createRng } from "./math/rng";
-import { moveTank } from "./tank";
-import type { Inputs, TankKind, WorldState } from "./types";
+import { resolveHits, stepBullets, tryFire } from "./bullet.ts";
+import { createRng } from "./math/rng.ts";
+import { moveTank } from "./tank.ts";
+import type { Inputs, TankKind, WorldState } from "./types.ts";
 
 /** ステージから組み立てた、World を作るのに必要な素データ。 */
 export type WorldSpec = {

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { nextFloat } from "../../src/core/math/rng";
-import { cloneWorld, hashWorld } from "../../src/core/snapshot";
-import { createWorld } from "../../src/core/world";
-import { toWorldSpec } from "../../src/levels/build";
-import { stage01 } from "../../src/levels/stage-01";
+import { nextFloat } from "../../src/core/math/rng.ts";
+import { cloneWorld, hashWorld } from "../../src/core/snapshot.ts";
+import { createWorld } from "../../src/core/world.ts";
+import { toWorldSpec } from "../../src/levels/build.ts";
+import { stage01 } from "../../src/levels/stage-01.ts";
 
 const world = () => createWorld(toWorldSpec(stage01), 1);
 

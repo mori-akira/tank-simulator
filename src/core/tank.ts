@@ -4,10 +4,10 @@ import {
   TANK_RADIUS,
   TANK_SPEED,
   TANK_TURN_RATE,
-} from "./constants";
-import { atan2, normalizeAngle } from "./math/trig";
-import { pushOutAlongAxis } from "./physics/collision";
-import type { Tank, TankInput, WorldState } from "./types";
+} from "./constants.ts";
+import { atan2, normalizeAngle } from "./math/trig.ts";
+import { pushOutAlongAxis } from "./physics/collision.ts";
+import type { Tank, TankInput, WorldState } from "./types.ts";
 
 export function tankSpeed(tank: Tank): number {
   return tank.kind === "player" ? TANK_SPEED : ENEMY_TYPES[tank.kind].speed;

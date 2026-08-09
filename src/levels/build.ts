@@ -1,6 +1,6 @@
-import { CELL_SIZE } from "../core/constants";
-import type { WorldSpec } from "../core/world";
-import type { Stage } from "./schema";
+import { CELL_SIZE } from "../core/constants.ts";
+import type { WorldSpec } from "../core/world.ts";
+import type { Stage } from "./schema.ts";
 
 export function toWorldSpec(stage: Stage): WorldSpec {
   const rows = stage.map.length;

@@ -1,4 +1,4 @@
-import type { WorldState } from "./types";
+import type { WorldState } from "./types.ts";
 
 export function cloneWorld(world: WorldState): WorldState {
   return {

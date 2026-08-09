@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { Bullet, Tank, TankInput } from "../../src/core/types";
-import { stepWorld } from "../../src/core/world";
-import { input, worldFromMap } from "../helpers/world";
+import type { Bullet, Tank, TankInput } from "../../src/core/types.ts";
+import { stepWorld } from "../../src/core/world.ts";
+import { input, worldFromMap } from "../helpers/world.ts";
 
 const ONE_ENEMY = [
   "##########",

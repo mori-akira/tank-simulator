@@ -1,12 +1,12 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { BULLET_TYPES, CELL_SIZE } from "../../src/core/constants";
-import { overlapsWall } from "../../src/core/physics/collision";
-import type { Bullet, Tank } from "../../src/core/types";
-import { createWorld, stepWorld } from "../../src/core/world";
-import { toWorldSpec } from "../../src/levels/build";
-import { stage01 } from "../../src/levels/stage-01";
-import { input } from "../helpers/world";
+import { BULLET_TYPES, CELL_SIZE } from "../../src/core/constants.ts";
+import { overlapsWall } from "../../src/core/physics/collision.ts";
+import type { Bullet, Tank } from "../../src/core/types.ts";
+import { createWorld, stepWorld } from "../../src/core/world.ts";
+import { toWorldSpec } from "../../src/levels/build.ts";
+import { stage01 } from "../../src/levels/stage-01.ts";
+import { input } from "../helpers/world.ts";
 
 const standard = BULLET_TYPES.standard;
 const spec = toWorldSpec(stage01);

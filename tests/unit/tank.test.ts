@@ -4,11 +4,11 @@ import {
   TANK_RADIUS,
   TANK_SPEED,
   TANK_TURN_RATE,
-} from "../../src/core/constants";
-import { overlapsWall } from "../../src/core/physics/collision";
-import type { Tank, TankInput } from "../../src/core/types";
-import { stepWorld } from "../../src/core/world";
-import { input, worldFromMap } from "../helpers/world";
+} from "../../src/core/constants.ts";
+import { overlapsWall } from "../../src/core/physics/collision.ts";
+import type { Tank, TankInput } from "../../src/core/types.ts";
+import { stepWorld } from "../../src/core/world.ts";
+import { input, worldFromMap } from "../helpers/world.ts";
 
 const MAP = ["#######", "#P...E#", "#..#..#", "#.....#", "#######"];
 

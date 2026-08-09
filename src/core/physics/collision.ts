@@ -1,6 +1,6 @@
-import { CELL_SIZE } from "../constants";
-import { isWall } from "../grid";
-import type { Vec2, WorldState } from "../types";
+import { CELL_SIZE } from "../constants.ts";
+import { isWall } from "../grid.ts";
+import type { Vec2, WorldState } from "../types.ts";
 
 // 押し戻しの余白。接するちょうどの位置に戻すと、丸め次第でわずかに残っためり込みが
 // 次のステップへ持ち越される。目に見えない幅だけ離して invariant を素直に保つ。

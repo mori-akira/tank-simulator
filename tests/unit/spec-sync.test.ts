@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import specMd from "../../docs/spec/parameters.md?raw";
-import * as constants from "../../src/core/constants";
+import * as constants from "../../src/core/constants.ts";
 import {
   BULLET_TYPES,
   CELL_SIZE,
   DT,
   MUZZLE_OFFSET,
   TANK_RADIUS,
-} from "../../src/core/constants";
+} from "../../src/core/constants.ts";
 
 // docs/spec/parameters.md と constants.ts は同じ数値を二重に持つ。数値は今後
 // デバッグで微調整されるため、片方だけ更新されてズレるのを機構で防ぐ（ADR 0005）。
