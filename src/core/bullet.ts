@@ -63,16 +63,30 @@ export function stepBullets(world: WorldState): void {
   );
 }
 
-/** 弾と戦車の当たり判定。自弾も自分に当たる（docs/requirements.md）。 */
+/**
+ * 弾と戦車の当たり判定。自弾も自分に当たる（docs/requirements.md）。
+ *
+ * 戦車同士に衝突判定はないので2台は重なれる。当たり判定の範囲を共有する位置に
+ * 2台いるとき、当てるのは近いほうでなければならない。world.tanks の並び順で
+ * 決めると、手前を素通りして奥が爆発する。
+ */
 export function resolveHits(world: WorldState): void {
   world.bullets = world.bullets.filter((bullet) => {
     const reach = TANK_RADIUS + BULLET_TYPES[bullet.type].radius;
-    const hit = world.tanks.find((tank) => {
-      if (!tank.alive) return false;
+    let hit: Tank | undefined;
+    let nearest = reach * reach;
+
+    for (const tank of world.tanks) {
+      if (!tank.alive) continue;
       const dx = tank.pos.x - bullet.pos.x;
       const dy = tank.pos.y - bullet.pos.y;
-      return dx * dx + dy * dy < reach * reach;
-    });
+      const d2 = dx * dx + dy * dy;
+      if (d2 < nearest) {
+        nearest = d2;
+        hit = tank;
+      }
+    }
+
     if (!hit) return true;
     hit.alive = false;
     return false;
