@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { advance, createLoop, MAX_FRAME } from "../../src/app/loop.ts";
-import { DT, SIM_HZ } from "../../src/core/constants.ts";
+import { advance, createLoop } from "../../src/app/loop.ts";
+import { DT, MAX_FRAME, SIM_HZ } from "../../src/core/constants.ts";
 import { hashWorld } from "../../src/core/snapshot.ts";
 import { createSim, stepSim } from "../../tools/run.ts";
 

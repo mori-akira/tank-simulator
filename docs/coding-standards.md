@@ -4,7 +4,8 @@
 
 ## コード
 
-- ゲームバランスに関わる数値はすべて `src/core/constants.ts` に集約する。マジックナンバーを各所に散らさない
+- **シミュレーションの進み方や結果を変える数値はすべて `src/core/constants.ts` に集約する。** マジックナンバーを各所に散らさない。使うのが `core` の外の層でも同じ。あわせて [spec/parameters.md](spec/parameters.md) に載せ、`tests/unit/spec-sync.test.ts` の検査対象にする
+- 見た目だけを決める数値（3Dの高さ・画角・余白・色）は `src/render/` に置く。`core` は高さも色も持たない（[architecture.md](architecture.md) 1. と 3.）
 - コメントは「なぜそうしたか」を書く。「何をしているか」はコードで表現する
 - 1ファイルが300行を超えたら分割を検討する
 - ステージデータは `src/levels/schema.ts` の zod スキーマで検証する

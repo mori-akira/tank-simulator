@@ -32,7 +32,7 @@ describe("spec と constants.ts の一致", () => {
   it("表を読み取れている", () => {
     // 正規表現が空振りしても «全件一致» は成立してしまう。件数で沈黙を防ぐ。
     // パラメータを増減したらこの数も更新する
-    expect(specValues.length).toBe(16);
+    expect(specValues.length).toBe(18);
   });
 
   it.each(specValues)("$name が spec と一致する", ({ name, value }) => {

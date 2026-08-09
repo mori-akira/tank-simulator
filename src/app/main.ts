@@ -1,4 +1,5 @@
 import { enemyInputs } from "../ai/enemy.ts";
+import { RNG_SEED } from "../core/constants.ts";
 import { createRng } from "../core/math/rng.ts";
 import type { Tank } from "../core/types.ts";
 import { createWorld, stepWorld } from "../core/world.ts";
@@ -9,15 +10,12 @@ import { createView } from "../render/view.ts";
 import { createHud } from "./hud.ts";
 import { advance, createLoop } from "./loop.ts";
 
-/** 敵の照準誤差に使う seed。固定にしておくと、見えた不具合をリロードで再現できる。 */
-const SEED = 1;
-
 const app = document.getElementById("app") as HTMLElement;
 const canvas = document.getElementById("scene") as HTMLCanvasElement;
 
 const world = createWorld(toWorldSpec(stage01));
 const player = world.tanks.find((t) => t.kind === "player") as Tank;
-const rng = createRng(SEED);
+const rng = createRng(RNG_SEED);
 
 const view = createView(canvas, world);
 const controls = createControls(canvas);

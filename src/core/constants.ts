@@ -1,4 +1,5 @@
-// ゲームバランスに関わる数値はすべてここに集約する（docs/coding-standards.md）。
+// シミュレーションの進み方や結果を変える数値はすべてここに集約する
+// （docs/coding-standards.md）。使うのが core の外の層でも同じ。
 // 値の意味と、値が満たすべき制約は docs/spec/parameters.md にある。
 // 両者の一致は tests/unit/spec-sync.test.ts が強制する。
 
@@ -6,6 +7,12 @@ export const SIM_HZ = 60;
 
 /** 1ステップの経過時間（秒）。 */
 export const DT = 1 / SIM_HZ;
+
+/** 1フレームで消化する経過時間の上限（秒）。 */
+export const MAX_FRAME = 0.25;
+
+/** 敵の照準誤差に使う乱数種。 */
+export const RNG_SEED = 1;
 
 export const CELL_SIZE = 1.0;
 export const STAGE_COLS = 24;

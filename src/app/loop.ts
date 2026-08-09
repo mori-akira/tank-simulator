@@ -1,11 +1,8 @@
-import { DT } from "../core/constants.ts";
+import { DT, MAX_FRAME } from "../core/constants.ts";
 
 // 描画のフレームレートとシミュレーションの固定タイムステップを分離する
 // （docs/architecture.md 2.）。フレーム間の経過時間を溜め、DT ぶん溜まるたびに
 // 1ステップ進める。何 fps で描いてもステップの中身は変わらない。
-
-/** 1フレームで消化する経過時間の上限（秒）。 */
-export const MAX_FRAME = 0.25;
 
 export type Loop = { accumulator: number };
 
