@@ -36,8 +36,8 @@ npm run shot      # スクリーンショット生成
 
 ## 進め方
 
-1. 実装前に [docs/spec/](docs/spec/) の該当箇所を読む。仕様にないことを勝手に決めない
-2. 仕様が曖昧ならオーナーに確認し、合意を `docs/spec/` に反映してから実装する
+1. 実装前に [docs/requirements.md](docs/requirements.md) と `docs/spec/` の該当箇所を読む。仕様にないことを勝手に決めない
+2. 仕様が曖昧ならオーナーに確認し、合意を `docs/spec/` に反映してから実装する（`docs/spec/` は未作成。M1 実装タスクの最初の工程で作成する）
 3. 実装し、検証する
 4. 仕様・構成を変えたなら、**同じ変更内で** `docs/` を更新し、`/doc-check` で整合性を検査する
 
@@ -52,6 +52,7 @@ npm run shot      # スクリーンショット生成
 - [docs/coding-standards.md](docs/coding-standards.md) — コーディング規約・テストの使い分け
 - [docs/workflow.md](docs/workflow.md) — タスク管理・ブランチ・コミット規約
 - [docs/roadmap.md](docs/roadmap.md) — 現在のマイルストーン
+- [docs/README.md](docs/README.md) — docs 配下のインデックス。要件・ADR・仕様はここから辿る
 
 ## 現在の状況
 

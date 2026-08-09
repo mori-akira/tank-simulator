@@ -49,7 +49,7 @@ npm run test:e2e   # Playwright（スクリーンショット取得を含む）
 
 **セットアップ段階。** ゲームはまだ動作しません。
 
-進行中のマイルストーンと完了条件は [docs/roadmap.md](docs/roadmap.md) を参照してください。
+進行中のマイルストーンは [docs/roadmap.md](docs/roadmap.md) から辿れます。
 
 ## ライセンス
 
