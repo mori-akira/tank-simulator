@@ -19,6 +19,7 @@
 - [0002](adr/0002-custom-physics.md) — 物理エンジンを使わず自作する
 - [0003](adr/0003-no-reactive-framework.md) — リアクティブフレームワークを採用しない
 - [0004](adr/0004-typescript-6-for-depcruise.md) — 層検査を空振りさせないため TypeScript を 6.x に固定する
+- [0005](adr/0005-enforce-invariants-in-harness.md) — 守るべき条件は文章ではなくハーネスで強制する
 
 ## spec/ — 実装仕様
 
