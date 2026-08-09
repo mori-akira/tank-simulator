@@ -11,7 +11,8 @@ import { METAL, TANK_COLORS } from "./colors.ts";
 
 const DIAMETER = TANK_RADIUS * 2;
 const HULL_HEIGHT = 0.3;
-const TURRET_HEIGHT = 0.4;
+/** 砲塔の高さ。弾はこの高さを飛ぶ。 */
+export const TURRET_HEIGHT = 0.4;
 
 const hullGeometry = new BoxGeometry(DIAMETER, HULL_HEIGHT, DIAMETER * 0.8);
 const domeGeometry = new CylinderGeometry(0.22, 0.24, 0.18, 16);

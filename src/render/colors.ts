@@ -15,3 +15,5 @@ export const WALL = 0x7a7f8a;
 export const WALL_TOP = 0x9aa0ac;
 /** 砲身。車体色と分けて、砲塔の向きを読み取りやすくする。 */
 export const METAL = 0x3a3d44;
+/** 弾。跳弾を目で追えることが最優先なので、床・壁・車体のどれとも色相を離す。 */
+export const BULLET = 0xffd400;

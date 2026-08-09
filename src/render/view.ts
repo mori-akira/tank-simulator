@@ -4,22 +4,25 @@ import {
   Color,
   DirectionalLight,
   Mesh,
+  MeshBasicMaterial,
   MeshLambertMaterial,
   PlaneGeometry,
   Scene,
+  SphereGeometry,
   WebGLRenderer,
 } from "three";
-import { CELL_SIZE } from "../core/constants.ts";
+import { BULLET_TYPES, CELL_SIZE } from "../core/constants.ts";
 import { isWall } from "../core/grid.ts";
-import type { WorldState } from "../core/types.ts";
-import { BACKGROUND, FLOOR, WALL, WALL_TOP } from "./colors.ts";
+import type { Vec2, WorldState } from "../core/types.ts";
+import { BACKGROUND, BULLET, FLOOR, WALL, WALL_TOP } from "./colors.ts";
 import {
   createStageCamera,
   frameStage,
+  groundAt,
   placeAt,
   setHeading,
 } from "./projection.ts";
-import { createTankObject } from "./tank.ts";
+import { createTankObject, TURRET_HEIGHT } from "./tank.ts";
 
 const WALL_HEIGHT = 0.9;
 
@@ -27,6 +30,8 @@ export type View = {
   /** 世界の現在の状態を描く。参照は createView が保持している。 */
   render(): void;
   resize(width: number, height: number): void;
+  /** カーソルの画面位置（NDC）が指す盤面上の位置。 */
+  groundAt(ndc: Vec2): Vec2;
 };
 
 export function createView(canvas: HTMLCanvasElement, world: WorldState): View {
@@ -55,6 +60,19 @@ export function createView(canvas: HTMLCanvasElement, world: WorldState): View {
   }));
   for (const { obj } of tanks) scene.add(obj.root);
 
+  // 弾は消えては湧く。使い回して、飛んでいるぶんだけ見せる
+  const bulletGeometry = new SphereGeometry(1, 12, 8);
+  const bulletMaterial = new MeshBasicMaterial({ color: BULLET });
+  const bulletPool: Mesh[] = [];
+  const bulletAt = (index: number): Mesh => {
+    const pooled = bulletPool[index];
+    if (pooled) return pooled;
+    const mesh = new Mesh(bulletGeometry, bulletMaterial);
+    bulletPool.push(mesh);
+    scene.add(mesh);
+    return mesh;
+  };
+
   return {
     render() {
       for (const { tank, obj } of tanks) {
@@ -63,6 +81,17 @@ export function createView(canvas: HTMLCanvasElement, world: WorldState): View {
         setHeading(obj.hull, tank.hull);
         setHeading(obj.turret, tank.turret);
       }
+
+      world.bullets.forEach((bullet, i) => {
+        const mesh = bulletAt(i);
+        mesh.scale.setScalar(BULLET_TYPES[bullet.type].radius);
+        // 砲身と同じ高さを飛ぶ。壁の上端より低いので、壁を越えて見えることはない
+        placeAt(mesh, bullet.pos, TURRET_HEIGHT);
+      });
+      for (const [i, mesh] of bulletPool.entries()) {
+        mesh.visible = i < world.bullets.length;
+      }
+
       renderer.render(scene, camera);
     },
 
@@ -72,6 +101,8 @@ export function createView(canvas: HTMLCanvasElement, world: WorldState): View {
       camera.aspect = width / height;
       frameStage(camera, world.cols, world.rows, WALL_HEIGHT);
     },
+
+    groundAt: (ndc) => groundAt(camera, ndc),
   };
 }
 

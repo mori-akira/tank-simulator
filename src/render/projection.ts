@@ -1,4 +1,11 @@
-import { type Object3D, PerspectiveCamera, Vector3 } from "three";
+import {
+  type Object3D,
+  PerspectiveCamera,
+  Plane,
+  Raycaster,
+  Vector2,
+  Vector3,
+} from "three";
 import { CELL_SIZE } from "../core/constants.ts";
 import { cos, sin } from "../core/math/trig.ts";
 import type { Vec2 } from "../core/types.ts";
@@ -13,6 +20,10 @@ const FOV_DEG = 45;
 const MARGIN = 1.04;
 
 const projectScratch = new Vector3();
+const GROUND = new Plane(new Vector3(0, 1, 0), 0);
+const raycaster = new Raycaster();
+const ndcScratch = new Vector2();
+const hitScratch = new Vector3();
 
 export function placeAt(obj: Object3D, pos: Vec2, height: number): void {
   obj.position.set(pos.x, height, pos.y);
@@ -76,6 +87,13 @@ function overflow(camera: PerspectiveCamera, corners: Vector3[]): number {
     worst = Math.max(worst, Math.abs(ndc.x), Math.abs(ndc.y));
   }
   return worst;
+}
+
+/** カーソルの画面位置（NDC）を、床平面上のロジック座標へ戻す。 */
+export function groundAt(camera: PerspectiveCamera, ndc: Vec2): Vec2 {
+  raycaster.setFromCamera(ndcScratch.set(ndc.x, ndc.y), camera);
+  raycaster.ray.intersectPlane(GROUND, hitScratch);
+  return { x: hitScratch.x, y: hitScratch.z };
 }
 
 /** 盤面を囲む直方体の8隅。壁の高さぶん、床の四隅だけでは足りない。 */
