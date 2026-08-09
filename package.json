@@ -15,10 +15,11 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "depcruise": "depcruise src tests tools",
+    "check:determinism": "tools/check-determinism.sh",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "shot": "playwright test tests/e2e/shot.spec.ts",
-    "verify": "npm run typecheck && npm run lint && npm run depcruise && npm run test && npm run build"
+    "verify": "npm run typecheck && npm run lint && npm run depcruise && npm run check:determinism && npm run test && npm run build"
   },
   "dependencies": {
     "three": "0.185.1",

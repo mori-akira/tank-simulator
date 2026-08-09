@@ -28,9 +28,10 @@
 npm run typecheck
 npm run lint       # 修正は npm run lint:fix
 npm run depcruise  # 層の依存方向を検査
+npm run check:determinism  # Math.random() の使用を検査
 npm run test       # Vitest（unit / property / sim）
 npm run test:e2e   # Playwright
 npm run sim        # ヘッドレスで自動プレイし結果を出力
 npm run shot       # スクリーンショット生成
-npm run verify     # typecheck + lint + depcruise + test + build
+npm run verify     # typecheck + lint + depcruise + check:determinism + test + build
 ```

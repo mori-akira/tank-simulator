@@ -11,7 +11,7 @@ src/
   levels/   ステージデータと zod スキーマ
   app/      ゲームループ・UI・組み立て
 tests/      unit / property / sim / e2e（用途は coding-standards.md）
-tools/      ヘッドレス実行のCLI
+tools/      ヘッドレス実行と検査のCLI
 ```
 
 ## 1. 層の依存方向
@@ -37,6 +37,8 @@ core ← { ai, render, app, input }
 - 乱数は `src/core/math/rng.ts` の seeded RNG のみ。`Math.random()` は禁止
 - 三角関数は `src/core/math/trig.ts` 経由で使う（実装を差し替え可能にしておくため）
 - `stepWorld(world, inputs)` は同じ入力列に対して常に同じ結果を返す
+
+`npm run check:determinism` が `Math.random()` の使用を CI で強制的に弾く。
 
 **理由:** 決定論があるから、リプレイのハッシュ比較によって「挙動を1ビットも変えずにリファクタした」ことを証明できる。AI に安心してリファクタさせられるかどうかがここに懸かっている。
 

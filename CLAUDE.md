@@ -28,7 +28,7 @@
 ## 検証
 
 ```bash
-npm run verify    # typecheck + lint + 層検査 + テスト + ビルド
+npm run verify    # typecheck + lint + 層検査 + 決定論検査 + テスト + ビルド
 npm run shot      # スクリーンショット生成
 ```
 
