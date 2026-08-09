@@ -10,7 +10,7 @@ src/
   input/    入力収集
   levels/   ステージデータと zod スキーマ
   app/      ゲームループ・UI・組み立て
-tests/      unit / property / sim / e2e
+tests/      unit / property / sim / e2e（用途は coding-standards.md）
 tools/      ヘッドレス実行のCLI
 ```
 
