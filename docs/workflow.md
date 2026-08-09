@@ -90,6 +90,14 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 
 「Three.js を採用する」は ADR、「Three.js のセットアップをする」は Issue。
 
+## 権限設定
+
+`.claude/settings.json` の `permissions` で、**ローカルで完結する操作は無確認、リモートに影響する操作は確認**とする。`git push`、`gh` の書き込み系、`npm publish` は `ask` に置く。
+
+`ask` は `allow` より優先される。そのため `Bash(gh:*)` のように広く許可したうえで、書き込み系のサブコマンドだけを `ask` で引き戻している。`allow` 側を細かく列挙するより漏れが少ない。
+
+ただし `git -C <path> push` のような書き方は `Bash(git push:*)` にマッチせず素通りする。**うっかりを防ぐ仕組みであり、機構的な保証ではない。**
+
 ## 前提ツール
 
 Issue の参照・操作には GitHub CLI (`gh`) を使う。
