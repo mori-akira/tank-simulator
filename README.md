@@ -37,7 +37,10 @@
 
 ## 開発
 
+Node.js のバージョンは `.nvmrc` に固定してある。
+
 ```bash
+nvm use            # .nvmrc のバージョンに合わせる
 npm install
 npm run dev        # 開発サーバ起動
 npm run verify     # typecheck + lint + 層検査 + テスト + ビルド
