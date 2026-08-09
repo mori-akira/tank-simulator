@@ -1,6 +1,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { BULLET_TYPES, CELL_SIZE } from "../../src/core/constants.ts";
+import { TAU } from "../../src/core/math/trig.ts";
 import { overlapsWall } from "../../src/core/physics/collision.ts";
 import type { Bullet, Tank } from "../../src/core/types.ts";
 import { createWorld, stepWorld } from "../../src/core/world.ts";
@@ -15,6 +16,13 @@ const floorCells = spec.walls.flatMap((wall, i) =>
 );
 
 const speedOf = (b: Bullet) => Math.hypot(b.vel.x, b.vel.y);
+
+// 角は整数から換算して引く。fc.double は値域ではなく «表現可能な double» の上で
+// 一様に引くため、9割が角0（真右）に張り付き、実質1方向しか試さなくなる。
+const ANGLE_STEPS = 720;
+const angle = fc
+  .integer({ min: 0, max: ANGLE_STEPS - 1 })
+  .map((i) => (i / ANGLE_STEPS) * TAU - Math.PI);
 
 /**
  * 床セルの中心から指定の向きへ1発撃つ。砲口が壁の中なら撃てないので null。
@@ -37,58 +45,48 @@ function fireFrom(cell: { col: number; row: number }, aim: number) {
 describe("弾の反射", () => {
   it("反射しても速度の大きさが保存され、壁の内側にも残らない", () => {
     fc.assert(
-      fc.property(
-        fc.constantFrom(...floorCells),
-        fc.double({ min: -Math.PI, max: Math.PI, noNaN: true }),
-        (cell, aim) => {
-          const fired = fireFrom(cell, aim);
-          if (!fired) return;
-          const { world, bullet } = fired;
-          const speed = speedOf(bullet);
+      fc.property(fc.constantFrom(...floorCells), angle, (cell, aim) => {
+        const fired = fireFrom(cell, aim);
+        if (!fired) return;
+        const { world, bullet } = fired;
+        const speed = speedOf(bullet);
 
-          // 生成ステップの中で反射していることがあり、その押し戻し後の座標は
-          // ループに入る前にしか見られない
+        // 生成ステップの中で反射していることがあり、その押し戻し後の座標は
+        // ループに入る前にしか見られない
+        expect(overlapsWall(world, bullet.pos, standard.radius)).toBe(false);
+
+        for (let i = 0; i < 200 && world.bullets.includes(bullet); i++) {
+          stepWorld(world, new Map());
+          expect(speedOf(bullet)).toBe(speed);
           expect(overlapsWall(world, bullet.pos, standard.radius)).toBe(false);
-
-          for (let i = 0; i < 200 && world.bullets.includes(bullet); i++) {
-            stepWorld(world, new Map());
-            expect(speedOf(bullet)).toBe(speed);
-            expect(overlapsWall(world, bullet.pos, standard.radius)).toBe(
-              false,
-            );
-          }
-        },
-      ),
+        }
+      }),
     );
   });
 
   it("反射のたびに残り回数が減り、使い切ると消える", () => {
     fc.assert(
-      fc.property(
-        fc.constantFrom(...floorCells),
-        fc.double({ min: -Math.PI, max: Math.PI, noNaN: true }),
-        (cell, aim) => {
-          const fired = fireFrom(cell, aim);
-          if (!fired) return;
-          const { world, bullet } = fired;
+      fc.property(fc.constantFrom(...floorCells), angle, (cell, aim) => {
+        const fired = fireFrom(cell, aim);
+        if (!fired) return;
+        const { world, bullet } = fired;
 
-          // 1ステップで減るのは高々1。角に当たっても反射は1回と数える
-          const start = bullet.bouncesLeft;
-          expect(start).toBeGreaterThanOrEqual(standard.bounces - 1);
-          expect(start).toBeLessThanOrEqual(standard.bounces);
+        // 1ステップで減るのは高々1。角に当たっても反射は1回と数える
+        const start = bullet.bouncesLeft;
+        expect(start).toBeGreaterThanOrEqual(standard.bounces - 1);
+        expect(start).toBeLessThanOrEqual(standard.bounces);
 
-          let bounces = 0;
-          let prev = { x: bullet.vel.x, y: bullet.vel.y };
-          for (let i = 0; i < 400 && world.bullets.includes(bullet); i++) {
-            stepWorld(world, new Map());
-            if (bullet.vel.x !== prev.x || bullet.vel.y !== prev.y) bounces++;
-            prev = { x: bullet.vel.x, y: bullet.vel.y };
-            expect(bullet.bouncesLeft).toBe(Math.max(0, start - bounces));
-          }
-          // 使い切ったあとの1発は、消える瞬間に速度が反転して数えられることがある
-          expect(bounces).toBeLessThanOrEqual(start + 1);
-        },
-      ),
+        let bounces = 0;
+        let prev = { x: bullet.vel.x, y: bullet.vel.y };
+        for (let i = 0; i < 400 && world.bullets.includes(bullet); i++) {
+          stepWorld(world, new Map());
+          if (bullet.vel.x !== prev.x || bullet.vel.y !== prev.y) bounces++;
+          prev = { x: bullet.vel.x, y: bullet.vel.y };
+          expect(bullet.bouncesLeft).toBe(Math.max(0, start - bounces));
+        }
+        // 使い切ったあとの1発は、消える瞬間に速度が反転して数えられることがある
+        expect(bounces).toBeLessThanOrEqual(start + 1);
+      }),
     );
   });
 });

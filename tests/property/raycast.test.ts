@@ -10,7 +10,13 @@ import { stage01 } from "../../src/levels/stage-01.ts";
 const r = BULLET_TYPES.standard.radius;
 const world = createWorld(toWorldSpec(stage01));
 
-const coord = (max: number) => fc.double({ min: 0, max, noNaN: true });
+// 値は整数から換算して引く。fc.double は値域ではなく «表現可能な double» の上で
+// 一様に引くため、0 付近に張り付いて実質1点しか試さなくなる。
+const STEPS_PER_UNIT = 64;
+const coord = (max: number) =>
+  fc
+    .integer({ min: 0, max: max * STEPS_PER_UNIT })
+    .map((i) => i / STEPS_PER_UNIT);
 const point = fc.record({ x: coord(world.cols), y: coord(world.rows) });
 
 describe("hasLineOfSight は通れない射線をクリアと言わない", () => {
@@ -31,7 +37,9 @@ describe("hasLineOfSight は通れない射線をクリアと言わない", () =
           expect(overlapsWall(world, p, r)).toBe(false);
         }
       }),
-      { numRuns: 300 },
+      // 射線が通らない組は何も表明せずに終わる。実際に表明へ届くのは約5%なので、
+      // 見かけの回数から1桁引いたものが実効の検査数になる
+      { numRuns: 3000 },
     );
   });
 });
