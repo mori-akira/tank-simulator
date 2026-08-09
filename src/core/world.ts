@@ -1,5 +1,6 @@
 import { createRng } from "./math/rng";
-import type { TankKind, WorldState } from "./types";
+import { moveTank } from "./tank";
+import type { Inputs, TankKind, WorldState } from "./types";
 
 /** ステージから組み立てた、World を作るのに必要な素データ。 */
 export type WorldSpec = {
@@ -31,7 +32,15 @@ export function createWorld(spec: WorldSpec, seed: number): WorldState {
   };
 }
 
-export function isWall(world: WorldState, col: number, row: number): boolean {
-  if (col < 0 || row < 0 || col >= world.cols || row >= world.rows) return true;
-  return world.walls[row * world.cols + col] === true;
+/**
+ * 世界を1ステップ進める。固定タイムステップであり、描画のフレームレートに依存しない
+ * （docs/architecture.md 2.）。WorldState は破壊的に更新する。
+ */
+export function stepWorld(world: WorldState, inputs: Inputs): void {
+  for (const tank of world.tanks) {
+    if (!tank.alive) continue;
+    const input = inputs.get(tank.id);
+    if (input) moveTank(world, tank, input);
+  }
+  world.tick += 1;
 }

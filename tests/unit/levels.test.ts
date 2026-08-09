@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CELL_SIZE, STAGE_COLS, STAGE_ROWS } from "../../src/core/constants";
-import { createWorld, isWall } from "../../src/core/world";
+import { isWall } from "../../src/core/grid";
+import { createWorld } from "../../src/core/world";
 import { toWorldSpec } from "../../src/levels/build";
 import { stageSchema } from "../../src/levels/schema";
 import { stage01 } from "../../src/levels/stage-01";
