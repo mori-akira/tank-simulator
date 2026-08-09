@@ -18,7 +18,7 @@ const speedOf = (b: Bullet) => Math.hypot(b.vel.x, b.vel.y);
 
 /** 床セルの中心から指定の向きへ1発撃つ。砲口が壁の中なら撃てないので null。 */
 function fireFrom(cell: { col: number; row: number }, aim: number) {
-  const world = createWorld(toWorldSpec(stage01), 1);
+  const world = createWorld(toWorldSpec(stage01));
   const player = world.tanks.find((t) => t.kind === "player") as Tank;
   player.pos.x = (cell.col + 0.5) * CELL_SIZE;
   player.pos.y = (cell.row + 0.5) * CELL_SIZE;

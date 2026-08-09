@@ -4,11 +4,8 @@ import { toWorldSpec } from "../../src/levels/build.ts";
 import { stageSchema } from "../../src/levels/schema.ts";
 
 /** テスト用の小さなステージを ASCII から組み立てる。 */
-export function worldFromMap(map: string[], seed = 1): WorldState {
-  return createWorld(
-    toWorldSpec(stageSchema.parse({ name: "test", map })),
-    seed,
-  );
+export function worldFromMap(map: string[]): WorldState {
+  return createWorld(toWorldSpec(stageSchema.parse({ name: "test", map })));
 }
 
 export const input = (over: Partial<TankInput> = {}): TankInput => ({

@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { nextFloat } from "../../src/core/math/rng.ts";
 import { cloneWorld, hashWorld } from "../../src/core/snapshot.ts";
 import { createWorld } from "../../src/core/world.ts";
 import { toWorldSpec } from "../../src/levels/build.ts";
 import { stage01 } from "../../src/levels/stage-01.ts";
 
-const world = () => createWorld(toWorldSpec(stage01), 1);
+const world = () => createWorld(toWorldSpec(stage01));
 
 describe("cloneWorld", () => {
   it("複製のハッシュは元と一致する", () => {
@@ -27,8 +26,6 @@ describe("cloneWorld", () => {
       vel: { x: 1, y: 0 },
       bouncesLeft: 1,
     });
-    nextFloat(b.rng);
-
     expect(hashWorld(a)).toBe(before);
     expect(hashWorld(b)).not.toBe(before);
   });
@@ -37,12 +34,6 @@ describe("cloneWorld", () => {
 describe("hashWorld", () => {
   it("同じ状態は同じハッシュになる", () => {
     expect(hashWorld(world())).toBe(hashWorld(world()));
-  });
-
-  it("seed が違えばハッシュも違う", () => {
-    const a = createWorld(toWorldSpec(stage01), 1);
-    const b = createWorld(toWorldSpec(stage01), 2);
-    expect(hashWorld(a)).not.toBe(hashWorld(b));
   });
 
   it.each([

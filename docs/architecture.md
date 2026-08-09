@@ -35,6 +35,7 @@ core ← { ai, render, app, input }
 
 - シミュレーションは固定タイムステップで進める。描画のフレームレートに依存させない
 - 乱数は `src/core/math/rng.ts` の seeded RNG のみ。`Math.random()` は禁止
+- 乱数の状態は `WorldState` に持たせない。乱数を引くのは `core` の外側（敵の照準誤差）であり、その結果は `stepWorld` に渡す入力に現れる。こうしておくと、**記録した入力列だけで世界を再現できる**
 - 三角関数は `src/core/math/trig.ts` 経由で使う（実装を差し替え可能にしておくため）
 - `stepWorld(world, inputs)` は同じ入力列に対して常に同じ結果を返す
 

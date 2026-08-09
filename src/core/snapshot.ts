@@ -3,7 +3,6 @@ import type { WorldState } from "./types.ts";
 export function cloneWorld(world: WorldState): WorldState {
   return {
     tick: world.tick,
-    rng: { state: world.rng.state },
     cols: world.cols,
     rows: world.rows,
     walls: world.walls.slice(),
@@ -42,7 +41,6 @@ export function hashWorld(world: WorldState): string {
   };
 
   num(world.tick);
-  num(world.rng.state);
   num(world.cols);
   num(world.rows);
   num(world.walls.length);

@@ -26,7 +26,7 @@ describe("戦車は壁にめり込まない", () => {
         fc.constantFrom(...floorCells),
         fc.array(move, { minLength: 1, maxLength: 120 }),
         (start, moves) => {
-          const world = createWorld(toWorldSpec(stage01), 1);
+          const world = createWorld(toWorldSpec(stage01));
           const player = world.tanks.find((t) => t.kind === "player") as Tank;
           player.pos.x = (start.col + 0.5) * CELL_SIZE;
           player.pos.y = (start.row + 0.5) * CELL_SIZE;

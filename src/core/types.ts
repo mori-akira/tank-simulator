@@ -1,5 +1,4 @@
 import type { BULLET_TYPES, ENEMY_TYPES } from "./constants.ts";
-import type { Rng } from "./math/rng.ts";
 
 /** ロジックは2D。高さ・Z軸・Vector3 は持ち込まない（docs/architecture.md 3.）。 */
 export type Vec2 = { x: number; y: number };
@@ -36,7 +35,6 @@ export type Outcome = "playing" | "cleared" | "failed";
 
 export type WorldState = {
   tick: number;
-  rng: Rng;
   cols: number;
   rows: number;
   /** 行優先のグリッド。長さは rows * cols。 */

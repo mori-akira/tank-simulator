@@ -37,7 +37,7 @@ describe("stage01", () => {
 
 describe("toWorldSpec", () => {
   const spec = toWorldSpec(stage01);
-  const w = createWorld(spec, 1);
+  const w = createWorld(spec);
 
   it("壁のグリッドが盤面全体を覆う", () => {
     expect(spec.walls).toHaveLength(STAGE_COLS * STAGE_ROWS);

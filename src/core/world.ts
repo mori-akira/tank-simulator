@@ -1,5 +1,4 @@
 import { resolveHits, stepBullets, tryFire } from "./bullet.ts";
-import { createRng } from "./math/rng.ts";
 import { moveTank } from "./tank.ts";
 import type { Inputs, TankKind, WorldState } from "./types.ts";
 
@@ -11,10 +10,9 @@ export type WorldSpec = {
   spawns: { kind: TankKind; x: number; y: number }[];
 };
 
-export function createWorld(spec: WorldSpec, seed: number): WorldState {
+export function createWorld(spec: WorldSpec): WorldState {
   return {
     tick: 0,
-    rng: createRng(seed),
     cols: spec.cols,
     rows: spec.rows,
     walls: spec.walls,
