@@ -11,7 +11,7 @@ src/
   levels/   ステージデータと zod スキーマ
   app/      ゲームループ・UI・組み立て
 tests/      unit / property / sim / e2e
-tools/      ヘッドレス実行・スクリーンショットのCLI
+tools/      ヘッドレス実行のCLI
 ```
 
 ## 1. 層の依存方向

@@ -1,0 +1,26 @@
+{
+  "forbidden": [
+    {
+      "name": "three-only-in-render",
+      "comment": "Three.js を import してよいのは src/render/ のみ（docs/architecture.md 1.）",
+      "severity": "error",
+      "from": { "pathNot": "^src/render/" },
+      "to": { "path": "^(node_modules/)?three(/|$)" }
+    },
+    {
+      "name": "core-depends-on-nothing",
+      "comment": "src/core/ は src/ 配下の他の層に依存しない（docs/architecture.md 1.）",
+      "severity": "error",
+      "from": { "path": "^src/core/" },
+      "to": { "path": "^src/", "pathNot": "^src/core/" }
+    }
+  ],
+  "options": {
+    "doNotFollow": { "path": "node_modules" },
+    "tsConfig": { "fileName": "tsconfig.json" },
+    "enhancedResolveOptions": {
+      "exportsFields": ["exports"],
+      "conditionNames": ["import", "require", "node", "default", "types"]
+    }
+  }
+}

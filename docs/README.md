@@ -18,6 +18,7 @@
 - [0001](adr/0001-threejs-instead-of-game-engine.md) — 外部ゲームエンジンを採用せず Three.js を使う（ロジック2D / 描画3D を含む）
 - [0002](adr/0002-custom-physics.md) — 物理エンジンを使わず自作する
 - [0003](adr/0003-no-reactive-framework.md) — リアクティブフレームワークを採用しない
+- [0004](adr/0004-typescript-6-for-depcruise.md) — 層検査を空振りさせないため TypeScript を 6.x に固定する
 
 ## spec/ — 実装仕様
 
