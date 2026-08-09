@@ -16,7 +16,13 @@ const floorCells = spec.walls.flatMap((wall, i) =>
 
 const speedOf = (b: Bullet) => Math.hypot(b.vel.x, b.vel.y);
 
-/** 床セルの中心から指定の向きへ1発撃つ。砲口が壁の中なら撃てないので null。 */
+/**
+ * 床セルの中心から指定の向きへ1発撃つ。砲口が壁の中なら撃てないので null。
+ *
+ * 弾を生む stepWorld はその同じステップで弾も進めるため、**返る時点で既に
+ * 反射している**ことがある（壁際から壁へ向けて撃つと起きる）。反射を数える側は
+ * standard.bounces ではなく、返った bullet.bouncesLeft を起点にすること。
+ */
 function fireFrom(cell: { col: number; row: number }, aim: number) {
   const world = createWorld(toWorldSpec(stage01));
   const player = world.tanks.find((t) => t.kind === "player") as Tank;
@@ -40,6 +46,10 @@ describe("弾の反射", () => {
           const { world, bullet } = fired;
           const speed = speedOf(bullet);
 
+          // 生成ステップの中で反射していることがあり、その押し戻し後の座標は
+          // ループに入る前にしか見られない
+          expect(overlapsWall(world, bullet.pos, standard.radius)).toBe(false);
+
           for (let i = 0; i < 200 && world.bullets.includes(bullet); i++) {
             stepWorld(world, new Map());
             expect(speedOf(bullet)).toBe(speed);
@@ -62,17 +72,21 @@ describe("弾の反射", () => {
           if (!fired) return;
           const { world, bullet } = fired;
 
+          // 1ステップで減るのは高々1。角に当たっても反射は1回と数える
+          const start = bullet.bouncesLeft;
+          expect(start).toBeGreaterThanOrEqual(standard.bounces - 1);
+          expect(start).toBeLessThanOrEqual(standard.bounces);
+
           let bounces = 0;
           let prev = { x: bullet.vel.x, y: bullet.vel.y };
           for (let i = 0; i < 400 && world.bullets.includes(bullet); i++) {
             stepWorld(world, new Map());
             if (bullet.vel.x !== prev.x || bullet.vel.y !== prev.y) bounces++;
             prev = { x: bullet.vel.x, y: bullet.vel.y };
-            expect(bullet.bouncesLeft).toBe(
-              Math.max(0, standard.bounces - bounces),
-            );
+            expect(bullet.bouncesLeft).toBe(Math.max(0, start - bounces));
           }
-          expect(bounces).toBeLessThanOrEqual(standard.bounces + 1);
+          // 使い切ったあとの1発は、消える瞬間に速度が反転して数えられることがある
+          expect(bounces).toBeLessThanOrEqual(start + 1);
         },
       ),
     );
