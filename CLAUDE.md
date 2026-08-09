@@ -37,7 +37,7 @@ npm run shot      # スクリーンショット生成
 ## 進め方
 
 1. 実装前に [docs/requirements.md](docs/requirements.md) と `docs/spec/` の該当箇所を読む。仕様にないことを勝手に決めない
-2. 仕様が曖昧ならオーナーに確認し、合意を `docs/spec/` に反映してから実装する（`docs/spec/` は未作成。M1 実装タスクの最初の工程で作成する）
+2. 仕様が曖昧ならオーナーに確認し、合意を `docs/spec/` に反映してから実装する
 3. 実装し、検証する
 4. 仕様・構成を変えたなら、**同じ変更内で** `docs/` を更新し、`/doc-check` で整合性を検査する
 
@@ -48,12 +48,10 @@ npm run shot      # スクリーンショット生成
 
 ## 参照
 
-- [docs/architecture.md](docs/architecture.md) — 層構成・座標系・決定論の詳細
-- [docs/coding-standards.md](docs/coding-standards.md) — コーディング規約・テストの使い分け
-- [docs/workflow.md](docs/workflow.md) — タスク管理・ブランチ・コミット規約
-- [docs/roadmap.md](docs/roadmap.md) — 現在のマイルストーン
-- [docs/README.md](docs/README.md) — docs 配下のインデックス。要件・ADR・仕様はここから辿る
+毎セッション読む3ファイル。
 
-## 現在の状況
+- [docs/architecture.md](docs/architecture.md)
+- [docs/coding-standards.md](docs/coding-standards.md)
+- [docs/workflow.md](docs/workflow.md)
 
-セットアップ段階。ビルド設定とソースコードは未整備で、上記コマンドはまだ動かない。
+要件・ロードマップ・ADR を含む docs 全体の地図は [docs/README.md](docs/README.md)。

@@ -2,7 +2,7 @@
 
 ## 何を作るか
 
-- [requirements.md](requirements.md) — ゲーム要件。コア体験・操作・ルール・敵の設計方針
+- [requirements.md](requirements.md) — ゲーム要件。コア体験・操作・ルール・ステージ・弾・敵の設計・スコア・音
 - [roadmap.md](roadmap.md) — 現在のマイルストーン。スコープと完了条件は GitHub Milestone 側にある
 
 ## どう作るか
