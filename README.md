@@ -43,7 +43,7 @@ Node.js のバージョンは `.nvmrc` に固定してある。
 nvm use            # .nvmrc のバージョンに合わせる
 npm install
 npm run dev        # 開発サーバ起動
-npm run verify     # typecheck + lint + 層検査 + 決定論検査 + テスト + ビルド
+npm run verify     # 全検査をまとめて実行
 npm run test       # テストのみ
 npm run test:e2e   # Playwright（スクリーンショット取得を含む）
 npm run sim        # ヘッドレスで自動プレイし結果を出力

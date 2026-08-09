@@ -28,7 +28,7 @@
 ## 検証
 
 ```bash
-npm run verify    # typecheck + lint + 層検査 + 決定論検査 + テスト + ビルド
+npm run verify    # 全検査。内訳は docs/coding-standards.md
 npm run shot      # スクリーンショット生成
 ```
 
