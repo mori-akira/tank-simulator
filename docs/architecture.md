@@ -57,4 +57,4 @@ core ← { ai, render, app, input }
 
 **理由:** 毎フレーム全エンティティが変化するため、スプレッド構文による複製はアロケーションが無駄になるうえ、フィールドの伝播漏れという LLM が起こしやすいミスを誘発する。決定論に必要なのは純粋性ではなく、固定タイムステップと seeded RNG である。
 
-リプレイ検証は `src/core/snapshot.ts` の `cloneWorld` / `hashWorld` で行う。
+リプレイ検証は `src/core/snapshot.ts` の `hashWorld` で行う。同じ入力列から同じハッシュが出ることを確かめるだけなので、状態の複製は要らない。

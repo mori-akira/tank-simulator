@@ -1,22 +1,5 @@
 import type { WorldState } from "./types.ts";
 
-export function cloneWorld(world: WorldState): WorldState {
-  return {
-    tick: world.tick,
-    cols: world.cols,
-    rows: world.rows,
-    walls: world.walls.slice(),
-    tanks: world.tanks.map((t) => ({ ...t, pos: { ...t.pos } })),
-    bullets: world.bullets.map((b) => ({
-      ...b,
-      pos: { ...b.pos },
-      vel: { ...b.vel },
-    })),
-    nextBulletId: world.nextBulletId,
-    outcome: world.outcome,
-  };
-}
-
 /**
  * WorldState 全体の 64bit ハッシュ。同じ入力列で同じ値になることがリプレイ検証の根拠。
  * 状態にフィールドを足したらここにも足すこと。落ちたフィールドは差分として現れない。

@@ -1,35 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { cloneWorld, hashWorld } from "../../src/core/snapshot.ts";
+import { hashWorld } from "../../src/core/snapshot.ts";
 import { createWorld } from "../../src/core/world.ts";
 import { toWorldSpec } from "../../src/levels/build.ts";
 import { stage01 } from "../../src/levels/stage-01.ts";
 
 const world = () => createWorld(toWorldSpec(stage01));
-
-describe("cloneWorld", () => {
-  it("複製のハッシュは元と一致する", () => {
-    const a = world();
-    expect(hashWorld(cloneWorld(a))).toBe(hashWorld(a));
-  });
-
-  it("複製を変更しても元に波及しない", () => {
-    const a = world();
-    const before = hashWorld(a);
-    const b = cloneWorld(a);
-
-    (b.tanks[0] as { pos: { x: number } }).pos.x += 1;
-    b.bullets.push({
-      id: 0,
-      ownerId: 0,
-      type: "standard",
-      pos: { x: 1, y: 1 },
-      vel: { x: 1, y: 0 },
-      bouncesLeft: 1,
-    });
-    expect(hashWorld(a)).toBe(before);
-    expect(hashWorld(b)).not.toBe(before);
-  });
-});
 
 describe("hashWorld", () => {
   it("同じ状態は同じハッシュになる", () => {
