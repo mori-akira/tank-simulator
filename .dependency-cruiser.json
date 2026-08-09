@@ -2,9 +2,9 @@
   "forbidden": [
     {
       "name": "three-only-in-render",
-      "comment": "Three.js を import してよいのは src/render/ のみ（docs/architecture.md 1.）",
+      "comment": "Three.js を import してよいのは src/render/ と tests/ のみ（docs/architecture.md 1.）",
       "severity": "error",
-      "from": { "pathNot": "^src/render/" },
+      "from": { "pathNot": "^(src/render/|tests/)" },
       "to": { "path": "^(node_modules/)?three(/|$)" }
     },
     {

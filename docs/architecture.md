@@ -22,7 +22,7 @@ core ← { ai, render, app, input }
 
 - `src/core/` は `three` を import しない。DOM API（`window`, `document`, `performance`）も使わない
 - `src/core/` は `src/` 配下の他の層に依存しない
-- Three.js を import してよいのは `src/render/` のみ
+- Three.js を import してよいのは `src/render/` と、それを検証する `tests/` のみ
 - `src/core/` はテクスチャ・色値・音声への参照を持たない。持つのは種類の識別子と、発射・反射・破壊といった出来事だけ。どの種類をどう描き、どの出来事にどの音を当てるかの対応付けは `core` の外側が持つ
 
 `npm run depcruise` が CI で強制する。

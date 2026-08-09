@@ -24,7 +24,7 @@ import {
 } from "./projection.ts";
 import { createTankObject, TURRET_HEIGHT } from "./tank.ts";
 
-const WALL_HEIGHT = 0.9;
+export const WALL_HEIGHT = 0.9;
 
 export type View = {
   /** 世界の現在の状態を描く。参照は createView が保持している。 */
