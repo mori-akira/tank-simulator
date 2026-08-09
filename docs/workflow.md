@@ -38,7 +38,9 @@ AI は自発的に Issue を作成しない。作業中に別の課題を見つ�
 
 ### main 直コミットの前提条件
 
-ブランチ保護の代わりに、**コミット前に `npm run verify` が通っていること**を必須とする。壊れたコードを `main` に入れない責任は、コミットする側（＝AI）にある。
+ブランチ保護の代わりに、**コミット前に `npm run verify` が通っていること**を必須とする。
+
+これは指示ではなく仕組みで強制する。`.claude/settings.json` の PreToolUse フックが `git commit` の前に `verify` を実行し、失敗したらコミットを中止する（`.claude/hooks/verify-before-commit.sh`）。指示だけでは、忘れたときに壊れたコードが `main` に入り、push 後の CI で初めて発覚する。
 
 `CLAUDE.md` や `docs/` を変更した場合は、あわせて `/doc-check` スキルでドキュメントの整合性を検査する。検出された不整合をどう扱うかはオーナーが判断する。
 
