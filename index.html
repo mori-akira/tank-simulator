@@ -35,6 +35,20 @@
         text-shadow: 0 2px 16px #000;
         pointer-events: none;
       }
+      /* 入力を待っていることを伝える。出っぱなしだと固まっているのか区別できない */
+      .hud--blink {
+        animation: hud-blink 1s infinite;
+      }
+      @keyframes hud-blink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        50.01%,
+        100% {
+          opacity: 0;
+        }
+      }
     </style>
   </head>
   <body>

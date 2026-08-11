@@ -19,5 +19,7 @@ export function createHud(root: HTMLElement): (phase: Phase) => void {
 
   return (phase) => {
     el.textContent = LABELS[phase];
+    // 点滅は待機中だけ。決着の表示は点滅させない
+    el.classList.toggle("hud--blink", phase === "waiting");
   };
 }
