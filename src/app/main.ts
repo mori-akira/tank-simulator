@@ -1,7 +1,7 @@
 import { enemyInputs } from "../ai/enemy.ts";
 import { RNG_SEED } from "../core/constants.ts";
 import { createRng } from "../core/math/rng.ts";
-import type { Tank } from "../core/types.ts";
+import type { Tank, TankInput } from "../core/types.ts";
 import { createWorld, stepWorld } from "../core/world.ts";
 import { createControls, toTankInput } from "../input/controls.ts";
 import { toWorldSpec } from "../levels/build.ts";
@@ -38,14 +38,16 @@ window.addEventListener("pointerup", (e) => {
   if (e.button === 0) startClickHeld = false;
 });
 
+function playerInput(): TankInput {
+  const cursor = view.groundAt(controls.pointerNdc);
+  const input = toTankInput(controls, player.pos, cursor);
+  if (startClickHeld) input.fire = false;
+  return input;
+}
+
 function step(): void {
   const inputs = enemyInputs(world, rng);
-  if (player.alive) {
-    const cursor = view.groundAt(controls.pointerNdc);
-    const input = toTankInput(controls, player.pos, cursor);
-    if (startClickHeld) input.fire = false;
-    inputs.set(player.id, input);
-  }
+  if (player.alive) inputs.set(player.id, playerInput());
   stepWorld(world, inputs);
 }
 
@@ -61,6 +63,9 @@ requestAnimationFrame(function frame(now) {
 
   // 開始前と決着後はシミュレーションを止める。描画は続けるので盤面は見えている
   if (started && world.outcome === "playing") advance(loop, elapsed, step);
+  // 待機中も砲塔はカーソルを向く（docs/requirements.md「操作」）。動かすのは向きだけで、
+  // 敵の思考もクールダウンも弾も止めたままにする
+  if (!started) player.turret = playerInput().aim;
   view.render();
   hud(started ? world.outcome : "waiting");
 });
