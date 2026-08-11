@@ -77,8 +77,10 @@ describe("発射", () => {
 
   it("クールダウン中は撃てない", () => {
     const { world, run } = setup();
+    // 秒のまま掛けると tick 数が整数にならず、ループ回数が丸めでずれる
+    const cooldownTicks = Math.round(FIRE_COOLDOWN * SIM_HZ);
     run(1, { aim: 0, fire: true });
-    run(FIRE_COOLDOWN * SIM_HZ - 1, { aim: 0, fire: true });
+    run(cooldownTicks - 1, { aim: 0, fire: true });
     expect(world.bullets).toHaveLength(1);
 
     run(1, { aim: 0, fire: true });
@@ -205,6 +207,38 @@ describe("反射", () => {
       () => !world.bullets.includes(bullet),
     );
     expect(world.bullets).not.toContain(bullet);
+  });
+});
+
+describe("連射", () => {
+  // 走りながら撃てる長さの通路。敵は射線から外した行に置く
+  const LONG = [
+    "##############",
+    "#............#",
+    "#P...........#",
+    "#............#",
+    "#...........E#",
+    "##############",
+  ];
+
+  const runLong = (over: Partial<TankInput>) => {
+    const world = worldFromMap(LONG);
+    const player = world.tanks[0] as Tank;
+    for (let i = 0; i < 60; i++) {
+      stepWorld(world, new Map([[player.id, input(over)]]));
+    }
+    return world;
+  };
+
+  // 弾はすべて相殺するので、間隔が短すぎると連射した自弾同士がその場で消える
+  it("静止して連射しても自弾が相殺しない", () => {
+    const world = runLong({ aim: 0, fire: true });
+    expect(world.bullets).toHaveLength(MAX_BULLETS_PER_TANK);
+  });
+
+  it("前進しながら連射しても自弾が相殺しない", () => {
+    const world = runLong({ aim: 0, move: { x: 1, y: 0 }, fire: true });
+    expect(world.bullets).toHaveLength(MAX_BULLETS_PER_TANK);
   });
 });
 

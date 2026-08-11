@@ -22,7 +22,7 @@ export const TANK_RADIUS = 0.4;
 export const TANK_SPEED = 3.0;
 export const TANK_TURN_RATE = 10.0;
 export const MUZZLE_OFFSET = 0.7;
-export const FIRE_COOLDOWN = 0.5;
+export const FIRE_COOLDOWN = 0.12;
 export const MAX_BULLETS_PER_TANK = 5;
 
 export const BULLET_TYPES = {

@@ -5,8 +5,11 @@ import {
   BULLET_TYPES,
   CELL_SIZE,
   DT,
+  FIRE_COOLDOWN,
   MUZZLE_OFFSET,
+  SIM_HZ,
   TANK_RADIUS,
+  TANK_SPEED,
 } from "../../src/core/constants.ts";
 
 // docs/spec/parameters.md と constants.ts は同じ数値を二重に持つ。数値は今後
@@ -60,6 +63,16 @@ describe("値が満たすべき制約", () => {
     "%s: 正面から向かい合う2発がすり抜けない",
     (_id, bullet) => {
       expect(bullet.speed * DT).toBeLessThan(bullet.radius);
+    },
+  );
+
+  it.each(Object.entries(BULLET_TYPES))(
+    "%s: 前進しながら連射しても自弾同士が重ならない",
+    (_id, bullet) => {
+      const ticks = Math.round(FIRE_COOLDOWN * SIM_HZ);
+      expect(ticks * (bullet.speed - TANK_SPEED) * DT).toBeGreaterThanOrEqual(
+        bullet.radius * 2,
+      );
     },
   );
 
