@@ -50,8 +50,8 @@
 
 | 名前 | 値 | 意味 |
 |---|---|---|
-| `BULLET_TYPES.standard.speed` | 4.0 | 弾速（unit/秒） |
-| `BULLET_TYPES.standard.radius` | 0.24 | 当たり判定の半径 |
+| `BULLET_TYPES.standard.speed` | 6.0 | 弾速（unit/秒） |
+| `BULLET_TYPES.standard.radius` | 0.16 | 当たり判定の半径 |
 | `BULLET_TYPES.standard.bounces` | 1 | 壁で反射できる回数。使い切ると消滅する |
 
 反射で速度の大きさは変わらない。弾に寿命は設けない（反射回数を使い切るか、戦車に当たることだけが消滅条件）。
