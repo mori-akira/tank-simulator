@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import { resolveHits } from "../../src/core/bullet.ts";
 import {
   BULLET_TYPES,
+  DT,
   FIRE_COOLDOWN,
   MAX_BULLETS_PER_TANK,
   MUZZLE_OFFSET,
   SIM_HZ,
+  TANK_RADIUS,
 } from "../../src/core/constants.ts";
 import { overlapsWall } from "../../src/core/physics/collision.ts";
 import type {
@@ -243,13 +245,26 @@ describe("連射", () => {
 });
 
 describe("弾同士の相殺", () => {
-  /** 中央付近を、指定の速度で飛ぶ弾を置く。 */
-  const put = (world: WorldState, x: number, vx: number, ownerId: number) => {
+  // 戦車の行から外して置く。戦車に当たって消えたのか相殺で消えたのかを混ぜない
+  const LANE_Y = 1.5;
+  const GAP = 1.0;
+  /** GAP 離れた2発が触れるまでの tick 数。接近速度は弾速の2倍。 */
+  const CLASH_TICKS = Math.ceil(
+    (GAP - standard.radius * 2) / (2 * standard.speed * DT),
+  );
+
+  const put = (
+    world: WorldState,
+    x: number,
+    vx: number,
+    ownerId: number,
+    y = LANE_Y,
+  ): Bullet => {
     const bullet: Bullet = {
       id: world.nextBulletId++,
       ownerId,
       type: "standard",
-      pos: { x, y: 3.5 },
+      pos: { x, y },
       vel: { x: vx, y: 0 },
       bouncesLeft: standard.bounces,
     };
@@ -257,42 +272,72 @@ describe("弾同士の相殺", () => {
     return bullet;
   };
 
-  it("正面から向かい合う2発は双方消える", () => {
+  // 触れるはずの tick 数だけ進めて見る。長く回して «いつか0発になる» を見ると、
+  // 壁や戦車で消えただけでも通ってしまう
+  it("正面から向かい合う2発は、触れた時点で双方消える", () => {
     const { world, run } = setup();
     put(world, 4.0, standard.speed, 90);
-    put(world, 5.0, -standard.speed, 91);
+    put(world, 4.0 + GAP, -standard.speed, 91);
 
-    runUntil(
-      () => run(1),
-      () => world.bullets.length === 0,
-    );
+    run(CLASH_TICKS);
+
     expect(world.bullets).toHaveLength(0);
+    expect(world.tanks.every((t) => t.alive)).toBe(true);
   });
 
   it("持ち主が同じでも消える", () => {
     const { world, run } = setup();
     put(world, 4.0, standard.speed, 90);
-    put(world, 5.0, -standard.speed, 90);
+    put(world, 4.0 + GAP, -standard.speed, 90);
 
-    runUntil(
-      () => run(1),
-      () => world.bullets.length === 0,
-    );
+    run(CLASH_TICKS);
+
     expect(world.bullets).toHaveLength(0);
   });
 
   it("離れてすれ違う2発は消えない", () => {
     const { world, run } = setup();
     const a = put(world, 4.0, standard.speed, 90);
-    const b = put(world, 5.0, -standard.speed, 91);
     // 当たり判定の外へずらす。すれ違っても触れない
-    b.pos.y = a.pos.y + standard.radius * 2 + 0.05;
-
-    runUntil(
-      () => run(1),
-      () => a.pos.x > b.pos.x + 1,
+    const b = put(
+      world,
+      4.0 + GAP,
+      -standard.speed,
+      91,
+      LANE_Y + standard.radius * 2 + 0.05,
     );
+
+    run(CLASH_TICKS * 2);
+
     expect(world.bullets).toContain(a);
     expect(world.bullets).toContain(b);
+  });
+
+  // 相殺は戦車への命中より先に判定する。順序が逆だと撃ち落としが成立しない
+  it("戦車に届く直前の弾を撃ち落とすと、その戦車は生き残る", () => {
+    const { world, player, run } = setup();
+    const step = standard.speed * DT;
+    const reach = TANK_RADIUS + standard.radius;
+    // 次の1ステップで自機の当たり判定に入る弾
+    put(
+      world,
+      player.pos.x + reach + step - 0.01,
+      -standard.speed,
+      91,
+      player.pos.y,
+    );
+    // 自機には届かないが、上の弾には触れる位置から迎え撃つ弾
+    put(
+      world,
+      player.pos.x + reach - step + 0.03,
+      standard.speed,
+      92,
+      player.pos.y,
+    );
+
+    run(1);
+
+    expect(player.alive).toBe(true);
+    expect(world.bullets).toHaveLength(0);
   });
 });
