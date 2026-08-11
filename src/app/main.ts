@@ -32,11 +32,15 @@ canvas.addEventListener("pointerdown", (e) => {
   started = true;
   startClickHeld = true;
 });
+// ボタンが離れたことは pointerup で受ける。step() の中で controls.fire を見て下ろすと、
+// 離してから次のステップが走る前に押し直した1発が捨てられる
+window.addEventListener("pointerup", (e) => {
+  if (e.button === 0) startClickHeld = false;
+});
 
 function step(): void {
   const inputs = enemyInputs(world, rng);
   if (player.alive) {
-    if (!controls.fire) startClickHeld = false;
     const cursor = view.groundAt(controls.pointerNdc);
     const input = toTankInput(controls, player.pos, cursor);
     if (startClickHeld) input.fire = false;
