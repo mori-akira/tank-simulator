@@ -141,18 +141,29 @@ describe("命中", () => {
 });
 
 describe("反射", () => {
-  it("壁で反射しても速度の大きさが変わらない", () => {
+  // 反射は «当たった軸の符号を反転する» 実装で、x と y は別々に書かれている。
+  // 片方の軸だけ見ていると、もう片方で速度が変わっていても気づかない
+  it.each([
+    ["縦の壁", { x: standard.speed, y: 0 }],
+    ["横の壁", { x: 0, y: -standard.speed }],
+  ])("%sで反射しても速度の大きさが変わらない", (_name, vel) => {
     const { world, run } = setup();
-    run(1, { aim: RICOCHET_AIM, fire: true });
-    const bullet = world.bullets[0] as Bullet;
+    const bullet: Bullet = {
+      id: world.nextBulletId++,
+      ownerId: 99,
+      type: "standard",
+      pos: { x: 4.5, y: 1.5 },
+      vel: { ...vel },
+      bouncesLeft: standard.bounces,
+    };
+    world.bullets.push(bullet);
     const before = speedOf(bullet);
 
     runUntil(
-      () => run(1, { aim: RICOCHET_AIM }),
-      () => bullet.vel.y > 0,
+      () => run(1),
+      () => bullet.vel.x !== vel.x || bullet.vel.y !== vel.y,
     );
     expect(world.bullets).toContain(bullet);
-    expect(bullet.vel.y).toBeGreaterThan(0); // 上の壁で反射して下向きになった
     expect(speedOf(bullet)).toBe(before);
   });
 
