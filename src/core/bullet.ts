@@ -41,7 +41,7 @@ export function tryFire(world: WorldState, tank: Tank): void {
     y: tank.pos.y + dirY * MUZZLE_OFFSET,
   };
 
-  // 壁に密着して壁を向くと砲口が壁の中に入る（TANK_RADIUS 0.4 < MUZZLE_OFFSET 0.55）。
+  // 壁に密着して壁を向くと砲口が壁の中に入る（TANK_RADIUS < MUZZLE_OFFSET のため）。
   // そこに湧いた弾は初回のステップで両軸とも反転し、撃った本人へ跳ね返ってくる。
   // 弾を歪んだ位置から出すより、その一発を撃てないことにする
   if (overlapsWall(world, pos, spec.radius)) return;

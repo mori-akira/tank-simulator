@@ -110,8 +110,8 @@ describe("発射", () => {
 });
 
 describe("命中", () => {
-  // 戦車同士は衝突しないので重なれる。当たり判定 0.52 を共有する位置に2台いるとき、
-  // 並び順で決めると手前を素通りして奥が爆発する（Issue #23）
+  // 戦車同士は衝突しないので重なれる。当たり判定（TANK_RADIUS + 弾の半径）を
+  // 共有する位置に2台いるとき、並び順で決めると手前を素通りして奥が爆発する（Issue #23）
   it.each([
     ["奥が先に並んでいても", true],
     ["手前が先に並んでいても", false],
@@ -119,7 +119,7 @@ describe("命中", () => {
     const world = worldFromMap(["#####", "#...#", "#P.E#", "#...#", "#####"]);
     const near = world.tanks[0] as Tank;
     const far = world.tanks[1] as Tank;
-    // 弾からの距離はどちらも当たり判定 0.52 の内側
+    // 弾からの距離はどちらも当たり判定の内側
     near.pos = { x: 2.0, y: 2.5 };
     far.pos = { x: 2.35, y: 2.5 };
     if (farFirst) world.tanks = [far, near];
