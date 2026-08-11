@@ -56,6 +56,13 @@ describe("値が満たすべき制約", () => {
     },
   );
 
+  it.each(Object.entries(BULLET_TYPES))(
+    "%s: 正面から向かい合う2発がすり抜けない",
+    (_id, bullet) => {
+      expect(bullet.speed * DT).toBeLessThan(bullet.radius);
+    },
+  );
+
   it("戦車が壁の隙間を通れる", () => {
     expect(TANK_RADIUS * 2).toBeLessThan(CELL_SIZE);
   });

@@ -78,10 +78,12 @@ describe("勝敗", () => {
 
   it("自分の弾が跳ね返って自分に当たっても失敗", () => {
     const { world, player, run } = setup(ONE_ENEMY);
-    // 真上に撃つと上の壁で反射して真下へ戻ってくる
-    const fire = new Map([[player.id, { aim: -Math.PI / 2, fire: true }]]);
+    // 真上に撃つと上の壁で反射して真下へ戻ってくる。
+    // 撃ち続けると戻ってきた自弾を次の弾が撃ち落とすので、1発だけ撃つ
+    run(1, new Map([[player.id, { aim: -Math.PI / 2, fire: true }]]));
+    const idle = new Map([[player.id, { aim: -Math.PI / 2 }]]);
     runUntil(
-      () => run(1, fire),
+      () => run(1, idle),
       () => world.outcome !== "playing",
     );
 

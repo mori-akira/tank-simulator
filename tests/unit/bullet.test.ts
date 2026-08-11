@@ -8,7 +8,12 @@ import {
   SIM_HZ,
 } from "../../src/core/constants.ts";
 import { overlapsWall } from "../../src/core/physics/collision.ts";
-import type { Bullet, Tank, TankInput } from "../../src/core/types.ts";
+import type {
+  Bullet,
+  Tank,
+  TankInput,
+  WorldState,
+} from "../../src/core/types.ts";
 import { stepWorld } from "../../src/core/world.ts";
 import { input, runUntil, worldFromMap } from "../helpers/world.ts";
 
@@ -37,12 +42,15 @@ function setup() {
 
 const speedOf = (b: Bullet) => Math.hypot(b.vel.x, b.vel.y);
 
-/** 誰にも当たらず壁にも触れない場所に置く、頭数合わせの弾。 */
-const farBullet = (id: number, ownerId: number): Bullet => ({
+/**
+ * 誰にも当たらず壁にも触れない場所に置く、頭数合わせの弾。
+ * 弾同士も相殺するので、互いに触れない間隔で並べる。
+ */
+const farBullet = (id: number, ownerId: number, i: number): Bullet => ({
   id,
   ownerId,
   type: "standard",
-  pos: { x: 4.5, y: 1.5 },
+  pos: { x: 2.5 + i * 0.5, y: 1.5 },
   vel: { x: 0, y: 0 },
   bouncesLeft: standard.bounces,
 });
@@ -80,7 +88,7 @@ describe("発射", () => {
   it("自弾が MAX_BULLETS_PER_TANK 発あると撃てない", () => {
     const { world, player, run } = setup();
     for (let i = 0; i < MAX_BULLETS_PER_TANK; i++) {
-      world.bullets.push(farBullet(world.nextBulletId++, player.id));
+      world.bullets.push(farBullet(world.nextBulletId++, player.id, i));
     }
     run(1, { aim: 0, fire: true });
     expect(world.bullets).toHaveLength(MAX_BULLETS_PER_TANK);
@@ -90,7 +98,7 @@ describe("発射", () => {
     const { world, player, run } = setup();
     const enemy = world.tanks[1] as Tank;
     for (let i = 0; i < MAX_BULLETS_PER_TANK; i++) {
-      world.bullets.push(farBullet(world.nextBulletId++, enemy.id));
+      world.bullets.push(farBullet(world.nextBulletId++, enemy.id, i));
     }
     run(1, { aim: 0, fire: true });
     expect(world.bullets.filter((b) => b.ownerId === player.id)).toHaveLength(
@@ -197,5 +205,60 @@ describe("反射", () => {
       () => !world.bullets.includes(bullet),
     );
     expect(world.bullets).not.toContain(bullet);
+  });
+});
+
+describe("弾同士の相殺", () => {
+  /** 中央付近を、指定の速度で飛ぶ弾を置く。 */
+  const put = (world: WorldState, x: number, vx: number, ownerId: number) => {
+    const bullet: Bullet = {
+      id: world.nextBulletId++,
+      ownerId,
+      type: "standard",
+      pos: { x, y: 3.5 },
+      vel: { x: vx, y: 0 },
+      bouncesLeft: standard.bounces,
+    };
+    world.bullets.push(bullet);
+    return bullet;
+  };
+
+  it("正面から向かい合う2発は双方消える", () => {
+    const { world, run } = setup();
+    put(world, 4.0, standard.speed, 90);
+    put(world, 5.0, -standard.speed, 91);
+
+    runUntil(
+      () => run(1),
+      () => world.bullets.length === 0,
+    );
+    expect(world.bullets).toHaveLength(0);
+  });
+
+  it("持ち主が同じでも消える", () => {
+    const { world, run } = setup();
+    put(world, 4.0, standard.speed, 90);
+    put(world, 5.0, -standard.speed, 90);
+
+    runUntil(
+      () => run(1),
+      () => world.bullets.length === 0,
+    );
+    expect(world.bullets).toHaveLength(0);
+  });
+
+  it("離れてすれ違う2発は消えない", () => {
+    const { world, run } = setup();
+    const a = put(world, 4.0, standard.speed, 90);
+    const b = put(world, 5.0, -standard.speed, 91);
+    // 当たり判定の外へずらす。すれ違っても触れない
+    b.pos.y = a.pos.y + standard.radius * 2 + 0.05;
+
+    runUntil(
+      () => run(1),
+      () => a.pos.x > b.pos.x + 1,
+    );
+    expect(world.bullets).toContain(a);
+    expect(world.bullets).toContain(b);
   });
 });

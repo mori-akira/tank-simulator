@@ -1,4 +1,9 @@
-import { resolveHits, stepBullets, tryFire } from "./bullet.ts";
+import {
+  resolveBulletClashes,
+  resolveHits,
+  stepBullets,
+  tryFire,
+} from "./bullet.ts";
 import { moveTank } from "./tank.ts";
 import type { Inputs, TankKind, WorldState } from "./types.ts";
 
@@ -47,6 +52,7 @@ export function stepWorld(world: WorldState, inputs: Inputs): void {
   }
 
   stepBullets(world);
+  resolveBulletClashes(world);
   resolveHits(world);
   updateOutcome(world);
   world.tick += 1;

@@ -10,7 +10,7 @@ import {
 import { cos, sin } from "./math/trig.ts";
 import { overlapsWall } from "./physics/collision.ts";
 import { advanceBullet } from "./physics/ricochet.ts";
-import type { BulletTypeId, Tank, WorldState } from "./types.ts";
+import type { Bullet, BulletTypeId, Tank, WorldState } from "./types.ts";
 
 const bulletTypeOf = (tank: Tank): BulletTypeId =>
   tank.kind === "player" ? "standard" : ENEMY_TYPES[tank.kind].bullet;
@@ -61,6 +61,31 @@ export function stepBullets(world: WorldState): void {
   world.bullets = world.bullets.filter((bullet) =>
     advanceBullet(world, bullet, BULLET_TYPES[bullet.type].radius),
   );
+}
+
+/**
+ * 弾同士の相殺。触れた2発は双方消える。持ち主は問わない
+ * （docs/requirements.md）。反射回数は消費しない。
+ *
+ * 戦車への命中より先に判定する。相殺で消えた弾は戦車に当たらず、撃ち落としが成立する。
+ */
+export function resolveBulletClashes(world: WorldState): void {
+  const gone = new Set<number>();
+
+  for (let i = 0; i < world.bullets.length; i++) {
+    for (let j = i + 1; j < world.bullets.length; j++) {
+      const a = world.bullets[i] as Bullet;
+      const b = world.bullets[j] as Bullet;
+      const reach = BULLET_TYPES[a.type].radius + BULLET_TYPES[b.type].radius;
+      const dx = a.pos.x - b.pos.x;
+      const dy = a.pos.y - b.pos.y;
+      if (dx * dx + dy * dy >= reach * reach) continue;
+      gone.add(a.id);
+      gone.add(b.id);
+    }
+  }
+
+  world.bullets = world.bullets.filter((bullet) => !gone.has(bullet.id));
 }
 
 /**

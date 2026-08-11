@@ -107,14 +107,20 @@ function nearestEnemy(world: WorldState, self: Tank): Tank | undefined {
   return best;
 }
 
+/**
+ * 次のウェイポイントへ向かう。使い切ったら先頭へ戻り、巡回する。
+ *
+ * 経路は「射線の通らない敵へ回り込む」ためのもので、どの敵がいつ死ぬかまでは織り込めない。
+ * 使い切ったところで止まると、残った敵に射線が通らないまま動かなくなる。標的へ直進させる
+ * 案は、経路探索がないため壁の角に嵌まって動けなくなった。巡回ならいずれ射線の通る位置に戻る。
+ */
 function toWaypoint(self: Tank, auto: AutoPlayer): Vec2 {
-  const goal = auto.waypoints[auto.next];
-  if (!goal) return { x: 0, y: 0 };
+  const goal = auto.waypoints[auto.next] as Vec2;
 
   const dx = goal.x - self.pos.x;
   const dy = goal.y - self.pos.y;
   if (Math.hypot(dx, dy) < ARRIVE) {
-    auto.next += 1;
+    auto.next = (auto.next + 1) % auto.waypoints.length;
     return { x: 0, y: 0 };
   }
   return { x: dx, y: dy };
