@@ -1,19 +1,23 @@
 import type { Outcome } from "../core/types.ts";
 
-// HUD は素の DOM（docs/adr/0003）。M1 では勝敗だけを出す。
+// HUD は素の DOM（docs/adr/0003）。M1 では開始待ちと勝敗だけを出す。
 
-const LABELS: Record<Outcome, string> = {
+/** 待機中はまだ世界が進んでいない状態であり、core の Outcome には現れない。 */
+export type Phase = "waiting" | Outcome;
+
+const LABELS: Record<Phase, string> = {
+  waiting: "CLICK TO START",
   playing: "",
   cleared: "STAGE CLEAR",
   failed: "GAME OVER",
 };
 
-export function createHud(root: HTMLElement): (outcome: Outcome) => void {
+export function createHud(root: HTMLElement): (phase: Phase) => void {
   const el = document.createElement("div");
   el.className = "hud";
   root.appendChild(el);
 
-  return (outcome) => {
-    el.textContent = LABELS[outcome];
+  return (phase) => {
+    el.textContent = LABELS[phase];
   };
 }

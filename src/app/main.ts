@@ -22,11 +22,25 @@ const controls = createControls(canvas);
 const hud = createHud(app);
 const loop = createLoop();
 
+// ステージの配置を見てから始められるよう、最初の左クリックまで世界を止めておく
+let started = false;
+// 開始のクリックは発射を兼ねない。押しっぱなしのまま始まると、意図しない1発目が出る
+let startClickHeld = false;
+
+canvas.addEventListener("pointerdown", (e) => {
+  if (e.button !== 0 || started) return;
+  started = true;
+  startClickHeld = true;
+});
+
 function step(): void {
   const inputs = enemyInputs(world, rng);
   if (player.alive) {
+    if (!controls.fire) startClickHeld = false;
     const cursor = view.groundAt(controls.pointerNdc);
-    inputs.set(player.id, toTankInput(controls, player.pos, cursor));
+    const input = toTankInput(controls, player.pos, cursor);
+    if (startClickHeld) input.fire = false;
+    inputs.set(player.id, input);
   }
   stepWorld(world, inputs);
 }
@@ -41,8 +55,8 @@ requestAnimationFrame(function frame(now) {
   const elapsed = (now - last) / 1000;
   last = now;
 
-  // 決着したらシミュレーションを止める。描画は続けるので画面は消えない
-  if (world.outcome === "playing") advance(loop, elapsed, step);
+  // 開始前と決着後はシミュレーションを止める。描画は続けるので盤面は見えている
+  if (started && world.outcome === "playing") advance(loop, elapsed, step);
   view.render();
-  hud(world.outcome);
+  hud(started ? world.outcome : "waiting");
 });
