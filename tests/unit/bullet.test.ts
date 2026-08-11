@@ -10,7 +10,7 @@ import {
 import { overlapsWall } from "../../src/core/physics/collision.ts";
 import type { Bullet, Tank, TankInput } from "../../src/core/types.ts";
 import { stepWorld } from "../../src/core/world.ts";
-import { input, worldFromMap } from "../helpers/world.ts";
+import { input, runUntil, worldFromMap } from "../helpers/world.ts";
 
 const standard = BULLET_TYPES.standard;
 
@@ -147,7 +147,10 @@ describe("反射", () => {
     const bullet = world.bullets[0] as Bullet;
     const before = speedOf(bullet);
 
-    run(20, { aim: RICOCHET_AIM });
+    runUntil(
+      () => run(1, { aim: RICOCHET_AIM }),
+      () => bullet.vel.y > 0,
+    );
     expect(world.bullets).toContain(bullet);
     expect(bullet.vel.y).toBeGreaterThan(0); // 上の壁で反射して下向きになった
     expect(speedOf(bullet)).toBe(before);
@@ -170,12 +173,18 @@ describe("反射", () => {
     const bullet = world.bullets[0] as Bullet;
 
     // 1回目の反射で残り 0
-    run(20, { aim: RICOCHET_AIM });
-    expect(world.bullets).toContain(bullet);
+    runUntil(
+      () => run(1, { aim: RICOCHET_AIM }),
+      () => bullet.bouncesLeft === 0,
+    );
     expect(bullet.bouncesLeft).toBe(0);
+    expect(world.bullets).toContain(bullet);
 
     // 2回目の反射で消える
-    run(60, { aim: RICOCHET_AIM });
+    runUntil(
+      () => run(1, { aim: RICOCHET_AIM }),
+      () => !world.bullets.includes(bullet),
+    );
     expect(world.bullets).not.toContain(bullet);
   });
 });

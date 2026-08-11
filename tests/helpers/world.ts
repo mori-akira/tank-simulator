@@ -17,3 +17,17 @@ export const input = (over: Partial<TankInput> = {}): TankInput => ({
 
 export const inputsFor = (id: number, over: Partial<TankInput> = {}): Inputs =>
   new Map([[id, input(over)]]);
+
+/**
+ * done が真になるまで step を呼ぶ。
+ *
+ * 「弾が届くまで60 tick」のように待つ長さを直に書くと、弾速や距離を調整した
+ * 瞬間にテストが落ちる。何 tick かかるかではなく、何が起きるまで待つのかを書く。
+ */
+export function runUntil(
+  step: () => void,
+  done: () => boolean,
+  cap = 600,
+): void {
+  for (let i = 0; i < cap && !done(); i++) step();
+}

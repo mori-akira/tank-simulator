@@ -50,7 +50,7 @@
 
 | 名前 | 値 | 意味 |
 |---|---|---|
-| `BULLET_TYPES.standard.speed` | 8.0 | 弾速（unit/秒） |
+| `BULLET_TYPES.standard.speed` | 4.0 | 弾速（unit/秒） |
 | `BULLET_TYPES.standard.radius` | 0.24 | 当たり判定の半径 |
 | `BULLET_TYPES.standard.bounces` | 1 | 壁で反射できる回数。使い切ると消滅する |
 

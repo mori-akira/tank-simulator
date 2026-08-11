@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Bullet, Tank, TankInput } from "../../src/core/types.ts";
 import { stepWorld } from "../../src/core/world.ts";
-import { input, worldFromMap } from "../helpers/world.ts";
+import { input, runUntil, worldFromMap } from "../helpers/world.ts";
 
 const ONE_ENEMY = [
   "##########",
@@ -41,7 +41,11 @@ function setup(map: string[]) {
 describe("勝敗", () => {
   it("敵を全滅させたらクリア", () => {
     const { world, player, enemies, run } = setup(ONE_ENEMY);
-    run(60, new Map([[player.id, { aim: 0, fire: true }]]));
+    const fire = new Map([[player.id, { aim: 0, fire: true }]]);
+    runUntil(
+      () => run(1, fire),
+      () => world.outcome !== "playing",
+    );
 
     expect(enemies[0]?.alive).toBe(false);
     expect(world.outcome).toBe("cleared");
@@ -49,7 +53,11 @@ describe("勝敗", () => {
 
   it("敵が残っているうちはクリアにならない", () => {
     const { world, player, enemies, run } = setup(TWO_ENEMIES);
-    run(60, new Map([[player.id, { aim: 0, fire: true }]]));
+    const fire = new Map([[player.id, { aim: 0, fire: true }]]);
+    runUntil(
+      () => run(1, fire),
+      () => enemies.some((e) => !e.alive),
+    );
 
     expect(enemies.filter((e) => e.alive)).toHaveLength(1);
     expect(world.outcome).toBe("playing");
@@ -58,7 +66,11 @@ describe("勝敗", () => {
   it("敵に撃たれたら失敗", () => {
     const { world, player, enemies, run } = setup(ONE_ENEMY);
     const enemy = enemies[0] as Tank;
-    run(60, new Map([[enemy.id, { aim: Math.PI, fire: true }]]));
+    const fire = new Map([[enemy.id, { aim: Math.PI, fire: true }]]);
+    runUntil(
+      () => run(1, fire),
+      () => world.outcome !== "playing",
+    );
 
     expect(player.alive).toBe(false);
     expect(world.outcome).toBe("failed");
@@ -67,7 +79,11 @@ describe("勝敗", () => {
   it("自分の弾が跳ね返って自分に当たっても失敗", () => {
     const { world, player, run } = setup(ONE_ENEMY);
     // 真上に撃つと上の壁で反射して真下へ戻ってくる
-    run(60, new Map([[player.id, { aim: -Math.PI / 2, fire: true }]]));
+    const fire = new Map([[player.id, { aim: -Math.PI / 2, fire: true }]]);
+    runUntil(
+      () => run(1, fire),
+      () => world.outcome !== "playing",
+    );
 
     expect(player.alive).toBe(false);
     expect(world.outcome).toBe("failed");
@@ -75,7 +91,11 @@ describe("勝敗", () => {
 
   it("一度ついた決着は覆らない", () => {
     const { world, player, run } = setup(ONE_ENEMY);
-    run(60, new Map([[player.id, { aim: 0, fire: true }]]));
+    const fire = new Map([[player.id, { aim: 0, fire: true }]]);
+    runUntil(
+      () => run(1, fire),
+      () => world.outcome !== "playing",
+    );
     expect(world.outcome).toBe("cleared");
 
     // クリア後に流れ弾で自機が破壊されても、結果は変わらない
