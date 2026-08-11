@@ -17,3 +17,5 @@ export const WALL_TOP = 0x9aa0ac;
 export const METAL = 0x3a3d44;
 /** 弾。跳弾を目で追えることが最優先なので、床・壁・車体のどれとも色相を離す。 */
 export const BULLET = 0xffd400;
+/** 弾のハイライト。球であることを一目で分からせる。 */
+export const BULLET_HIGHLIGHT = 0xfff6c0;

@@ -4,8 +4,8 @@ import {
   Color,
   DirectionalLight,
   Mesh,
-  MeshBasicMaterial,
   MeshLambertMaterial,
+  MeshPhongMaterial,
   PlaneGeometry,
   Scene,
   SphereGeometry,
@@ -14,7 +14,14 @@ import {
 import { BULLET_TYPES, CELL_SIZE } from "../core/constants.ts";
 import { isWall } from "../core/grid.ts";
 import type { Vec2, WorldState } from "../core/types.ts";
-import { BACKGROUND, BULLET, FLOOR, WALL, WALL_TOP } from "./colors.ts";
+import {
+  BACKGROUND,
+  BULLET,
+  BULLET_HIGHLIGHT,
+  FLOOR,
+  WALL,
+  WALL_TOP,
+} from "./colors.ts";
 import {
   createStageCamera,
   frameStage,
@@ -61,8 +68,14 @@ export function createView(canvas: HTMLCanvasElement, world: WorldState): View {
   for (const { obj } of tanks) scene.add(obj.root);
 
   // 弾は消えては湧く。使い回して、飛んでいるぶんだけ見せる
-  const bulletGeometry = new SphereGeometry(1, 12, 8);
-  const bulletMaterial = new MeshBasicMaterial({ color: BULLET });
+  const bulletGeometry = new SphereGeometry(1, 20, 14);
+  // 光を受けない材質だと全面が同じ色になり、球なのに平らな円に見える。
+  // ハイライトの出る材質にして、小さくても球だと分かるようにする
+  const bulletMaterial = new MeshPhongMaterial({
+    color: BULLET,
+    specular: BULLET_HIGHLIGHT,
+    shininess: 60,
+  });
   const bulletPool: Mesh[] = [];
   const bulletAt = (index: number): Mesh => {
     const pooled = bulletPool[index];
