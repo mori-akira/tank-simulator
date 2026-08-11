@@ -21,12 +21,12 @@ export const STAGE_ROWS = 16;
 export const TANK_RADIUS = 0.4;
 export const TANK_SPEED = 3.0;
 export const TANK_TURN_RATE = 10.0;
-export const MUZZLE_OFFSET = 0.55;
+export const MUZZLE_OFFSET = 0.7;
 export const FIRE_COOLDOWN = 0.5;
 export const MAX_BULLETS_PER_TANK = 5;
 
 export const BULLET_TYPES = {
-  standard: { speed: 8.0, radius: 0.12, bounces: 1 },
+  standard: { speed: 8.0, radius: 0.24, bounces: 1 },
 } as const;
 
 // 敵の種類は、ロジックの選択と数値の組み合わせとして定義する。
